@@ -1,0 +1,44 @@
+# User Requested Ignores
+/diagrams/
+/.agents/
+/agents/
+/srs.docx
+/System_Design_BonBonCar.md
+/UML_Diagrams_BonBonCar.md
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.zed/
+.cursor/
+
+# Environments and Dependencies (Root level)
+.env
+.env.*
+node_modules/
+vendor/
+
+# Backend Specific (Recursive)
+backend/.env
+backend/storage/*.key
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/testing/*
+backend/storage/framework/views/*
+backend/storage/logs/*.log
+backend/vendor/
+backend/node_modules/
+
+# Frontend Specific (Recursive)
+frontend/.env
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local

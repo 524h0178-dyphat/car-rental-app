@@ -1,0 +1,128 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\CarSubmission\StoreCarSubmissionRequest;
+use App\Models\CarSubmission;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class CarSubmissionController extends Controller
+{
+    /**
+     * POST /api/v1/car-submissions
+     * Public: anyone can submit (optionally with auth user_id attached)
+     */
+    public function store(StoreCarSubmissionRequest $request): JsonResponse
+    {
+        $submission = CarSubmission::create([
+            ...$request->validated(),
+            'user_id' => $request->user()?->id,
+        ]);
+
+        return response()->json([
+            'message' => 'Đăng ký ký gửi xe thành công! Chúng tôi sẽ liên hệ trong 24 giờ.',
+            'data'    => [
+                'id'         => $submission->id,
+                'status'     => $submission->status,
+                'created_at' => $submission->created_at->toDateTimeString(),
+            ],
+        ], 201);
+    }
+
+    /**
+     * GET /api/v1/car-submissions/my
+     * Auth: list current user's submissions
+     */
+    public function mySubmissions(Request $request): JsonResponse
+    {
+        $submissions = CarSubmission::where('user_id', $request->user()->id)
+            ->latest()
+            ->get()
+            ->map(fn($s) => [
+                'id'           => $s->id,
+                'brand'        => $s->brand,
+                'model'        => $s->model,
+                'year'         => $s->year,
+                'license_plate'=> $s->license_plate,
+                'status'       => $s->status,
+                'status_label' => $s->statusLabel(),
+                'created_at'   => $s->created_at->toDateTimeString(),
+            ]);
+
+        return response()->json(['data' => $submissions]);
+    }
+
+    /**
+     * GET /api/v1/admin/car-submissions
+     * Admin: paginated list of all car submissions
+     */
+    public function adminList(Request $request): JsonResponse
+    {
+        $submissions = CarSubmission::with('user:id,name,email,phone')
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->search, fn($q) => $q->where(function ($q2) use ($request) {
+                $q2->where('owner_name', 'like', "%{$request->search}%")
+                   ->orWhere('owner_phone', 'like', "%{$request->search}%")
+                   ->orWhere('license_plate', 'like', "%{$request->search}%");
+            }))
+            ->latest()
+            ->paginate(15);
+
+        return response()->json([
+            'data' => $submissions->map(fn($s) => [
+                'id'                    => $s->id,
+                'owner_name'            => $s->owner_name,
+                'owner_phone'           => $s->owner_phone,
+                'owner_email'           => $s->owner_email,
+                'brand'                 => $s->brand,
+                'model'                 => $s->model,
+                'year'                  => $s->year,
+                'license_plate'         => $s->license_plate,
+                'transmission'          => $s->transmission,
+                'fuel'                  => $s->fuel,
+                'seats'                 => $s->seats,
+                'expected_price_per_day'=> $s->expected_price_per_day,
+                'location_province'     => $s->location_province,
+                'description'           => $s->description,
+                'status'                => $s->status,
+                'status_label'          => $s->statusLabel(),
+                'reject_reason'         => $s->reject_reason,
+                'user'                  => $s->user ? ['id' => $s->user->id, 'name' => $s->user->name] : null,
+                'created_at'            => $s->created_at->toDateTimeString(),
+            ]),
+            'meta' => [
+                'total'     => $submissions->total(),
+                'last_page' => $submissions->lastPage(),
+                'current_page' => $submissions->currentPage(),
+            ],
+        ]);
+    }
+
+    /**
+     * PATCH /api/v1/admin/car-submissions/{id}/status
+     * Admin: approve or reject a submission
+     */
+    public function updateSubmissionStatus(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'status'        => ['required', 'in:reviewing,approved,rejected'],
+            'reject_reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $submission = CarSubmission::findOrFail($id);
+        $submission->update([
+            'status'        => $request->status,
+            'reject_reason' => $request->status === 'rejected' ? $request->reject_reason : null,
+        ]);
+
+        return response()->json([
+            'message' => 'Cập nhật trạng thái thành công.',
+            'data'    => [
+                'id'           => $submission->id,
+                'status'       => $submission->status,
+                'status_label' => $submission->statusLabel(),
+            ],
+        ]);
+    }
+}
