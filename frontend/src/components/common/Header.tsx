@@ -172,14 +172,14 @@ export default function Header() {
         <div className="flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group" aria-label="BonBonCar trang chủ">
+          <Link to="/" className="flex items-center gap-2 group" aria-label="SkibidiCar trang chủ">
             <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center shadow-orange group-hover:scale-110 transition-transform duration-200">
               <Car className="w-5 h-5 text-white" />
             </div>
             <span className={`text-xl font-bold tracking-tight transition-colors ${
               isTransparent ? 'text-white' : 'text-slate-900'
             }`}>
-              Bon<span className="text-brand-500">Bon</span>Car
+              Skibidi<span className="text-brand-500">Car</span>
             </span>
           </Link>
 

@@ -1,7 +1,7 @@
-import api from './api';
+﻿import api from './api';
 import type { AuthResponse, LoginPayload, RegisterPayload, AuthUser } from '@/types/auth';
 
-const TOKEN_KEY = 'bonboncar_token';
+const TOKEN_KEY = 'skibidicar_token';
 
 export const authService = {
   /** Persist token to localStorage */
@@ -43,5 +43,23 @@ export const authService = {
   getMe: async (): Promise<AuthUser> => {
     const res = await api.get<{ data: AuthUser }>('/auth/me');
     return res.data.data;
+  },
+
+  /** POST /auth/forgot-password */
+  forgotPassword: async (email: string): Promise<{ message: string }> => {
+    const res = await api.post('/auth/forgot-password', { email });
+    return res.data;
+  },
+
+  /** POST /auth/verify-otp */
+  verifyOtp: async (email: string, otp: string): Promise<{ message: string }> => {
+    const res = await api.post('/auth/verify-otp', { email, otp });
+    return res.data;
+  },
+
+  /** POST /auth/reset-password */
+  resetPassword: async (payload: any): Promise<{ message: string }> => {
+    const res = await api.post('/auth/reset-password', payload);
+    return res.data;
   },
 };

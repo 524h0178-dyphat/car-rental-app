@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser } from '@/types/auth';
 import { authService } from '@/services/authService';
@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'bonboncar-auth',
+      name: 'skibidicar-auth',
       // Only persist user + token (not functions)
       partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }),
     }

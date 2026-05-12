@@ -1,10 +1,10 @@
-# User Requested Ignores
+﻿# User Requested Ignores
 /diagrams/
 /.agents/
 /agents/
 /srs.docx
-/System_Design_BonBonCar.md
-/UML_Diagrams_BonBonCar.md
+/System_Design_SkibidiCar.md
+/UML_Diagrams_SkibidiCar.md
 
 # OS Files
 .DS_Store

@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+﻿import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
   title?: string;
@@ -7,9 +7,9 @@ interface SEOProps {
   url?: string;
 }
 
-const SITE_NAME = 'BonBonCar';
+const SITE_NAME = 'SkibidiCar';
 const DEFAULT_DESC = 'Thuê xe tự lái uy tín tại Việt Nam. Hàng trăm mẫu xe, giá minh bạch, đặt xe nhanh chóng.';
-const BASE_URL = 'https://bonboncar.vn';
+const BASE_URL = 'https://skibidicar.vn';
 
 export default function SEO({ title, description, image, url }: SEOProps) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} - Thuê xe tự lái uy tín`;

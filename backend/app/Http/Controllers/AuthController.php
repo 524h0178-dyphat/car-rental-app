@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\UpdateProfileRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 // [BACKEND REVIEW]
 // ✅ Input validation: Via FormRequest (RegisterRequest, LoginRequest)
@@ -132,6 +138,65 @@ class AuthController extends Controller
         $user->update(['password' => Hash::make($request->password)]);
 
         return response()->json(['message' => 'Đổi mật khẩu thành công!']);
+    }
+
+    /**
+     * POST /api/v1/auth/forgot-password
+     */
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
+        $email = $request->email;
+        $otp = (string) rand(100000, 999999);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => Hash::make($otp),
+                'created_at' => now()
+            ]
+        );
+
+        Mail::to($email)->send(new OtpMail($otp));
+
+        return response()->json(['message' => 'Mã OTP đã được gửi đến email của bạn.']);
+    }
+
+    /**
+     * POST /api/v1/auth/verify-otp
+     */
+    public function verifyOtp(VerifyOtpRequest $request): JsonResponse
+    {
+        $record = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+
+        if (!$record || !Hash::check($request->otp, $record->token)) {
+            return response()->json(['message' => 'Mã OTP không chính xác.'], 400);
+        }
+
+        // Check if OTP is expired (e.g., 15 minutes)
+        if (now()->diffInMinutes($record->created_at) > 15) {
+            return response()->json(['message' => 'Mã OTP đã hết hạn.'], 400);
+        }
+
+        return response()->json(['message' => 'Mã OTP hợp lệ.']);
+    }
+
+    /**
+     * POST /api/v1/auth/reset-password
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $record = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+
+        if (!$record || !Hash::check($request->otp, $record->token)) {
+            return response()->json(['message' => 'Mã OTP không chính xác hoặc đã hết hạn.'], 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->update(['password' => Hash::make($request->password)]);
+
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return response()->json(['message' => 'Mật khẩu đã được đặt lại thành công!']);
     }
 
     /**

@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface ThemeStore {
@@ -18,7 +18,7 @@ export const useThemeStore = create<ThemeStore>()(
       },
     }),
     {
-      name: 'bonboncar-theme',
+      name: 'skibidicar-theme',
       onRehydrateStorage: () => (state) => {
         // Restore dark class on page load
         if (state?.isDark) {

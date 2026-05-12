@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+﻿import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Clock, Headphones, Star, ArrowRight, MapPin } from 'lucide-react';
 import HeroSearchForm from '@/components/features/HeroSearchForm';
@@ -73,7 +73,7 @@ function HeroSection() {
         </h1>
 
         <p className="text-lg text-white/75 mb-10 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '200ms' }}>
-          Hàng trăm mẫu xe đa dạng, giá minh bạch, thủ tục đơn giản. Khám phá mọi hành trình cùng BonBonCar!
+          Hàng trăm mẫu xe đa dạng, giá minh bạch, thủ tục đơn giản. Khám phá mọi hành trình cùng SkibidiCar!
         </p>
 
         {/* Search Form */}
@@ -98,10 +98,10 @@ function HeroSection() {
 // ─── Section: Benefits ──────────────────────────────────────────────────
 function BenefitsSection() {
   return (
-    <section className="py-20 bg-slate-50" aria-label="Lợi ích khi thuê xe tại BonBonCar">
+    <section className="py-20 bg-slate-50" aria-label="Lợi ích khi thuê xe tại SkibidiCar">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="section-title">Tại sao chọn BonBonCar?</h2>
+          <h2 className="section-title">Tại sao chọn SkibidiCar?</h2>
           <p className="mt-3 text-slate-500 max-w-xl mx-auto">
             Chúng tôi cam kết mang đến trải nghiệm thuê xe tốt nhất cho bạn.
           </p>

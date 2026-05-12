@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+﻿import { Helmet } from 'react-helmet-async';
 
 interface BreadcrumbItem {
   name: string;
@@ -9,7 +9,7 @@ interface Props {
   items: BreadcrumbItem[];
 }
 
-const BASE_URL = 'https://bonboncar.vn';
+const BASE_URL = 'https://skibidicar.vn';
 
 export default function JsonLdBreadcrumb({ items }: Props) {
   const schema = {
@@ -76,7 +76,7 @@ export function JsonLdOrganization() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'BonBonCar',
+    name: 'SkibidiCar',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     contactPoint: {

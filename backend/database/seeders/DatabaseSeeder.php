@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace Database\Seeders;
 
@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
     {
         // ── Admin user ──────────────────────────────────────────────────────
         User::create([
-            'name'     => 'Admin BonBonCar',
-            'email'    => 'admin@bonboncar.vn',
+            'name'     => 'Admin SkibidiCar',
+            'email'    => 'admin@skibidicar.vn',
             'password' => Hash::make('password'),
             'role'     => 'admin',
         ]);
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         // ── Test customer ───────────────────────────────────────────────────
         User::create([
             'name'     => 'Nguyễn Văn A',
-            'email'    => 'user@bonboncar.vn',
+            'email'    => 'user@skibidicar.vn',
             'password' => Hash::make('password'),
             'role'     => 'customer',
         ]);
@@ -43,8 +43,8 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('');
         $this->command->info('🎉 Database seeded thành công!');
-        $this->command->info('   Admin: admin@bonboncar.vn / password');
-        $this->command->info('   User:  user@bonboncar.vn  / password');
+        $this->command->info('   Admin: admin@skibidicar.vn / password');
+        $this->command->info('   User:  user@skibidicar.vn  / password');
         $this->command->info('   Tổng xe: ' . \App\Models\Car::count());
     }
 }

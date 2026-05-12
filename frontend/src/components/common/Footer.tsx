@@ -12,7 +12,7 @@ const footerLinks = {
     { label: 'Câu hỏi thường gặp', to: '#' },
     { label: 'Liên hệ', to: '#' },
   ],
-  'Về BonBonCar': [
+  'Về SkibidiCar': [
     { label: 'Giới thiệu', to: '#' },
     { label: 'Chính sách bảo mật', to: '#' },
     { label: 'Điều khoản dịch vụ', to: '#' },
@@ -27,12 +27,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-white/10">
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="BonBonCar">
+            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="SkibidiCar">
               <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
                 <Car className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">
-                Bon<span className="text-brand-500">Bon</span>Car
+                Skibidi<span className="text-brand-500">Car</span>
               </span>
             </Link>
             <p className="text-sm leading-relaxed mb-6 max-w-xs">
@@ -43,9 +43,9 @@ export default function Footer() {
                 <Phone className="w-4 h-4 text-brand-400" />
                 1900 1234
               </a>
-              <a href="mailto:support@bonboncar.vn" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="mailto:support@skibidicar.vn" className="flex items-center gap-2 hover:text-white transition-colors">
                 <Mail className="w-4 h-4 text-brand-400" />
-                support@bonboncar.vn
+                support@skibidicar.vn
               </a>
               <span className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-brand-400 flex-shrink-0" />
@@ -77,7 +77,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs">
-            © {new Date().getFullYear()} BonBonCar. Tất cả quyền được bảo lưu.
+            © {new Date().getFullYear()} SkibidiCar. Tất cả quyền được bảo lưu.
           </p>
           <div className="flex items-center gap-3">
             <a

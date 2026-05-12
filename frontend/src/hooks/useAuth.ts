@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+﻿import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/authStore';
@@ -36,7 +36,7 @@ export function useRegister() {
     onSuccess: ({ data }) => {
       setAuth(data.user, data.token);
       toast.success('Đăng ký thành công! 🎉', {
-        description: `Chào mừng ${data.user.name} đến với BonBonCar!`,
+        description: `Chào mừng ${data.user.name} đến với SkibidiCar!`,
       });
       navigate('/');
     },

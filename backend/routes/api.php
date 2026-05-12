@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes – BonBonCar
+| API Routes – SkibidiCar
 |--------------------------------------------------------------------------
 */
 
@@ -20,6 +20,9 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->middleware('throttle:10,1')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login',    [AuthController::class, 'login']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::post('/verify-otp',      [AuthController::class, 'verifyOtp']);
+        Route::post('/reset-password',  [AuthController::class, 'resetPassword']);
     });
 
     // ── Auth (protected) ─────────────────────────────────────────────────

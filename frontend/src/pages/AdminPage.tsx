@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import {
   Car, Users, Calendar, TrendingUp, Loader2,
@@ -400,7 +400,7 @@ export default function AdminPage() {
               <BarChart3 className="w-7 h-7 text-brand-500" />
               Admin Dashboard
             </h1>
-            <p className="text-slate-500 text-sm mt-1">Quản lý xe và đơn thuê của BonBonCar</p>
+            <p className="text-slate-500 text-sm mt-1">Quản lý xe và đơn thuê của SkibidiCar</p>
           </div>
           <Link to="/" className="btn-outline text-sm py-2 px-4">
             Xem trang web

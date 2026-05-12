@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Car, User, FileText, CheckCircle2, ChevronRight,
@@ -82,7 +82,7 @@ const BENEFITS = [
   { icon: '🛡️', title: 'Bảo hiểm toàn diện', desc: 'Bảo hiểm tai nạn và vật chất theo từng chuyến thuê' },
   { icon: '📱', title: 'Theo dõi realtime', desc: 'Xem đơn thuê, doanh thu trực tiếp trên ứng dụng' },
   { icon: '🔧', title: 'Hỗ trợ bảo dưỡng', desc: 'Đội ngũ kỹ thuật hỗ trợ định kỳ và đột xuất 24/7' },
-  { icon: '💼', title: 'Quản lý chuyên nghiệp', desc: 'BonBonCar lo toàn bộ: đặt cọc, hợp đồng, giải quyết tranh chấp' },
+  { icon: '💼', title: 'Quản lý chuyên nghiệp', desc: 'SkibidiCar lo toàn bộ: đặt cọc, hợp đồng, giải quyết tranh chấp' },
 ];
 
 // ── Step 0: Intro ─────────────────────────────────────────────────────────────
@@ -93,7 +93,7 @@ function StepIntro({ onNext }: { onNext: () => void }) {
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center mx-auto mb-4 shadow-orange">
           <Car className="w-10 h-10 text-white" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Ký gửi xe cùng BonBonCar</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Ký gửi xe cùng SkibidiCar</h2>
         <p className="text-slate-500 text-sm max-w-md mx-auto">
           Biến xe nhàn rỗi thành nguồn thu nhập. Quy trình đơn giản, an toàn, minh bạch.
         </p>
@@ -347,7 +347,7 @@ function StepConfirm({ form, onBack, onSubmit, isLoading, error }: any) {
       ))}
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-700">
-        <p className="font-medium mb-1">📋 Cam kết của BonBonCar</p>
+        <p className="font-medium mb-1">📋 Cam kết của SkibidiCar</p>
         <ul className="space-y-1 text-amber-600 text-xs list-disc list-inside">
           <li>Liên hệ xác nhận trong vòng 24 giờ làm việc</li>
           <li>Thông tin được bảo mật tuyệt đối</li>
@@ -411,14 +411,14 @@ export default function CarSubmissionPage() {
   if (success) {
     return (
       <div className="min-h-screen pt-20 bg-slate-50 flex items-center justify-center px-4">
-        <SEO title="Đăng ký ký gửi xe" description="Ký gửi xe với BonBonCar" />
+        <SEO title="Đăng ký ký gửi xe" description="Ký gửi xe với SkibidiCar" />
         <div className="max-w-md w-full text-center">
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-green-500" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 mb-2">Gửi đăng ký thành công!</h1>
           <p className="text-slate-500 mb-8">
-            Cảm ơn bạn đã tin tưởng BonBonCar. Đội ngũ tư vấn sẽ liên hệ qua số{' '}
+            Cảm ơn bạn đã tin tưởng SkibidiCar. Đội ngũ tư vấn sẽ liên hệ qua số{' '}
             <strong>{form.owner_phone}</strong> trong vòng <strong>24 giờ</strong>.
           </p>
           <div className="bg-white border border-slate-200 rounded-2xl p-5 text-sm text-left mb-6 space-y-2">
@@ -441,7 +441,7 @@ export default function CarSubmissionPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-slate-50">
-      <SEO title="Ký gửi xe" description="Đăng ký ký gửi xe tự lái cùng BonBonCar. Thu nhập thụ động, bảo hiểm toàn diện." url="/ky-gui-xe" />
+      <SEO title="Ký gửi xe" description="Đăng ký ký gửi xe tự lái cùng SkibidiCar. Thu nhập thụ động, bảo hiểm toàn diện." url="/ky-gui-xe" />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
         <nav className="mb-6 flex items-center gap-2 text-sm text-slate-400">
           <Link to="/" className="hover:text-slate-600">Trang chủ</Link>
