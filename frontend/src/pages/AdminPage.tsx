@@ -26,14 +26,14 @@ function StatCard({
   icon: React.ElementType; color: string;
 }) {
   return (
-    <div className="card p-6 flex items-start gap-4">
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${color}`}>
-        <Icon className="w-6 h-6 text-white" />
+    <div className="card p-4 flex items-start gap-3" title={`${label}: ${value}`}>
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
+        <Icon className="w-5 h-5 text-white" />
       </div>
-      <div>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{label}</p>
-        <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
-        {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
+      <div className="min-w-0">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-0.5 truncate">{label}</p>
+        <p className="text-xl font-bold text-slate-900 dark:text-white truncate">{value}</p>
+        {sub && <p className="text-xs text-slate-400 mt-0.5 truncate">{sub}</p>}
       </div>
     </div>
   );
@@ -662,20 +662,21 @@ export default function AdminPage() {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="card p-6 animate-pulse h-28">
-                  <div className="h-12 w-12 rounded-2xl bg-slate-100 mb-3" />
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="card p-4 animate-pulse h-24">
+                  <div className="h-10 w-10 rounded-xl bg-slate-100 mb-3" />
                   <div className="h-4 bg-slate-100 rounded w-1/2 mb-2" />
-                  <div className="h-6 bg-slate-100 rounded w-1/3" />
+                  <div className="h-5 bg-slate-100 rounded w-1/3" />
                 </div>
               ))
             : [
                 { label: 'Tổng xe',       value: stats?.total_cars     ?? 0, sub: `${stats?.available_cars ?? 0} xe còn trống`,  icon: Car,         color: 'bg-brand-500' },
                 { label: 'Người dùng',    value: stats?.total_users    ?? 0, sub: 'Khách hàng đã đăng ký',                        icon: Users,       color: 'bg-blue-500'  },
                 { label: 'Tổng đơn',      value: stats?.total_bookings ?? 0, sub: `${stats?.bookings_status?.pending ?? 0} chờ xác nhận`, icon: Calendar,    color: 'bg-sky-500'},
-                { label: 'Doanh thu',     value: formatPrice(stats?.revenue ?? 0), sub: 'Từ đơn đã xác nhận',                   icon: TrendingUp,  color: 'bg-green-500' },
+                { label: 'Doanh thu',     value: formatPrice(stats?.revenue ?? 0), sub: 'Hoa hồng (10%)',                       icon: TrendingUp,  color: 'bg-green-500' },
+                { label: 'Tổng tiền đơn', value: formatPrice(stats?.total_amount ?? 0), sub: 'Tổng giá trị đơn hàng',             icon: TrendingUp,  color: 'bg-emerald-500' },
               ].map((s) => <StatCard key={s.label} {...s} />)
           }
         </div>

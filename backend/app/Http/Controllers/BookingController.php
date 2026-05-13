@@ -133,25 +133,29 @@ class BookingController extends Controller
         }
 
         $totalPrice = $car->price_per_day * $totalDays;
+        $commissionAmount = ($totalPrice * 10) / 100; // 10% fee
+        $ownerAmount = $totalPrice - $commissionAmount;
 
         $booking = Booking::create([
-            'user_id'        => $request->user()->id,
-            'car_id'         => $car->id,
-            'start_date'     => $startDate,
-            'end_date'       => $endDate,
-            'total_days'     => $totalDays,
-            'price_per_day'  => $car->price_per_day,
-            'total_price'    => $totalPrice,
-            'renter_name'    => $request->renter_name,
-            'renter_phone'   => $request->renter_phone,
-            'renter_cccd'    => $request->renter_cccd,
-            'renter_license' => $request->renter_license,
-            'pickup_address' => $request->pickup_address,
-            'pickup_note'    => $request->pickup_note,
-            'payment_method' => $request->payment_method,
-            'payment_status' => 'pending',
-            'status'         => 'pending',
-            'note'           => $request->note,
+            'user_id'           => $request->user()->id,
+            'car_id'            => $car->id,
+            'start_date'        => $startDate,
+            'end_date'          => $endDate,
+            'total_days'        => $totalDays,
+            'price_per_day'     => $car->price_per_day,
+            'total_price'       => $totalPrice,
+            'commission_amount' => $commissionAmount,
+            'owner_amount'      => $ownerAmount,
+            'renter_name'       => $request->renter_name,
+            'renter_phone'      => $request->renter_phone,
+            'renter_cccd'       => $request->renter_cccd,
+            'renter_license'    => $request->renter_license,
+            'pickup_address'    => $request->pickup_address,
+            'pickup_note'       => $request->pickup_note,
+            'payment_method'    => $request->payment_method,
+            'payment_status'    => 'pending',
+            'status'            => 'pending',
+            'note'              => $request->note,
         ]);
 
         return response()->json([
@@ -359,9 +363,8 @@ class BookingController extends Controller
 
         // Payout logic: transfer money to owner's wallet (minus platform fee)
         if ($booking->payment_status === 'paid' && $booking->payout_status === 'pending') {
-            $platformFeePercent = 10; // 10% fee
-            $fee = ($booking->total_price * $platformFeePercent) / 100;
-            $payoutAmount = $booking->total_price - $fee;
+            $payoutAmount = $booking->owner_amount ?? ($booking->total_price * 0.9);
+            $platformFeePercent = 10; // Giữ lại để hiển thị trong mô tả
 
             $wallet = \App\Models\Wallet::firstOrCreate(
                 ['user_id' => $booking->car->owner_id],

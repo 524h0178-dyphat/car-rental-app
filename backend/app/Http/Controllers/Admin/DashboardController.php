@@ -21,7 +21,13 @@ class DashboardController extends Controller
         $totalUsers    = User::where('role', 'customer')->count();
         $totalBookings = Booking::count();
 
-        $revenueConfirmed = Booking::whereIn('status', ['confirmed', 'active', 'completed'])
+        $revenueConfirmed = Booking::whereIn('status', ['active', 'completed'])
+            ->get()
+            ->sum(function($b) {
+                return $b->commission_amount ?? ($b->total_price * 0.1);
+            });
+
+        $totalGmv = Booking::whereIn('status', ['active', 'completed'])
             ->sum('total_price');
 
         $bookingsByStatus = Booking::selectRaw('status, count(*) as count')
@@ -46,9 +52,9 @@ class DashboardController extends Controller
             ]);
 
         // Monthly revenue (last 6 months)
-        $monthlyRevenue = Booking::whereIn('status', ['confirmed', 'active', 'completed'])
+        $monthlyRevenue = Booking::whereIn('status', ['active', 'completed'])
             ->where('created_at', '>=', now()->subMonths(6))
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_price) as revenue, COUNT(*) as count')
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(COALESCE(commission_amount, total_price * 0.1)) as revenue, COUNT(*) as count')
             ->groupByRaw('YEAR(created_at), MONTH(created_at)')
             ->orderByRaw('YEAR(created_at), MONTH(created_at)')
             ->get();
@@ -60,6 +66,7 @@ class DashboardController extends Controller
                 'total_users'      => $totalUsers,
                 'total_bookings'   => $totalBookings,
                 'revenue'          => $revenueConfirmed,
+                'total_amount'     => $totalGmv,
                 'bookings_status'  => $bookingsByStatus,
                 'recent_bookings'  => $recentBookings,
                 'monthly_revenue'  => $monthlyRevenue,
