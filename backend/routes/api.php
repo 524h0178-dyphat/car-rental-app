@@ -36,6 +36,12 @@ Route::prefix('v1')->group(function () {
         Route::patch('/profile',     [AuthController::class, 'updateProfile']);
         Route::put('/password',      [AuthController::class, 'changePassword']); // spec: PUT
         Route::patch('/password',    [AuthController::class, 'changePassword']);
+        
+        // Email Verification & Change
+        Route::post('/request-verification', [AuthController::class, 'requestVerification']);
+        Route::post('/verify-email',         [AuthController::class, 'verifyEmail']);
+        Route::post('/request-email-change', [AuthController::class, 'requestEmailChange']);
+        Route::post('/verify-email-change',  [AuthController::class, 'verifyEmailChange']);
     });
 
     // ── Filter meta ───────────────────────────────────────────────────────

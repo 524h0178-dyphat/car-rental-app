@@ -49,17 +49,21 @@ export default function AppRouter() {
             <Route path="/xe/:slug"    element={<CarDetailPage />} />
             <Route path="/ky-gui-xe"   element={<CarSubmissionPage />} />
 
-            {/* Protected (requires login) */}
-            <Route element={<ProtectedRoute />}>
+            {/* Protected (requires login AND verification) */}
+            <Route element={<ProtectedRoute requireVerified />}>
               <Route path="/dat-xe/:slug"         element={<BookingPage />} />
               <Route path="/dat-xe-cua-toi"       element={<MyBookingsPage />} />
               <Route path="/dat-xe-cua-toi/:id"   element={<BookingDetailPage />} />
-              <Route path="/tai-khoan"             element={<ProfilePage />} />
               <Route path="/admin"                 element={<AdminPage />} />
               <Route path="/vi-dien-tu"            element={<WalletPage />} />
               <Route path="/xe-cho-thue"           element={<OwnerBookingsPage />} />
               <Route path="/don-ky-gui"            element={<MyCarSubmissionsPage />} />
               <Route path="/viet-danh-gia/:bookingId" element={<ReviewCreatePage />} />
+            </Route>
+
+            {/* Protected (requires login only, so users can verify their account) */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/tai-khoan"             element={<ProfilePage />} />
             </Route>
           </Route>
 

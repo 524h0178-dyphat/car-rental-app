@@ -18,20 +18,24 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ── Admin user ──────────────────────────────────────────────────────
-        User::create([
-            'name'     => 'Admin SkibidiCar',
-            'email'    => 'admin@skibidicar.vn',
-            'password' => Hash::make('password'),
-            'role'     => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email'    => 'admin@skibidicar.vn'],
+            [
+                'name'     => 'Admin SkibidiCar',
+                'password' => Hash::make('password'),
+                'role'     => 'admin',
+            ]
+        );
 
         // ── Test customer ───────────────────────────────────────────────────
-        User::create([
-            'name'     => 'Nguyễn Văn A',
-            'email'    => 'user@skibidicar.vn',
-            'password' => Hash::make('password'),
-            'role'     => 'customer',
-        ]);
+        User::firstOrCreate(
+            ['email'    => 'user@skibidicar.vn'],
+            [
+                'name'     => 'Nguyễn Văn A',
+                'password' => Hash::make('password'),
+                'role'     => 'customer',
+            ]
+        );
 
         // ── Seed 30 xe thực tế (RealCarSeeder) ──────────────────────────────
         $this->call(RealCarSeeder::class);

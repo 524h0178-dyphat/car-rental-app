@@ -148,7 +148,7 @@ export default function SearchPage() {
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
-                <div className="flex flex-wrap items-center gap-2 rounded-xl border border-cyan-100 bg-white px-3 py-2 shadow-sm">
+                <div className="flex flex-wrap items-center gap-2 rounded-xl border border-cyan-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 shadow-sm">
                   <Calendar className="w-4 h-4 text-brand-500" />
                   <label htmlFor="search-start" className="sr-only">Ngày nhận xe</label>
                   <input
@@ -157,7 +157,7 @@ export default function SearchPage() {
                     value={filters.start_date ?? ''}
                     min={new Date().toISOString().split('T')[0]}
                     onChange={(e) => setFilters({ start_date: e.target.value, page: '1' })}
-                    className="text-sm text-slate-700 outline-none"
+                    className="text-sm text-slate-700 dark:text-slate-200 bg-transparent outline-none"
                   />
                   <span className="text-slate-300">-</span>
                   <label htmlFor="search-end" className="sr-only">Ngày trả xe</label>
@@ -167,7 +167,7 @@ export default function SearchPage() {
                     value={filters.end_date ?? ''}
                     min={filters.start_date || new Date().toISOString().split('T')[0]}
                     onChange={(e) => setFilters({ end_date: e.target.value, page: '1' })}
-                    className="text-sm text-slate-700 outline-none"
+                    className="text-sm text-slate-700 dark:text-slate-200 bg-transparent outline-none"
                   />
                 </div>
               </div>
@@ -243,7 +243,7 @@ export default function SearchPage() {
                 <button
                   onClick={() => setFilters({ page: String(currentPage - 1) })}
                   disabled={currentPage <= 1}
-                  className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label="Trang trước"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -252,7 +252,7 @@ export default function SearchPage() {
                 {getPageNumbers()[0] > 1 && (
                   <>
                     <button onClick={() => setFilters({ page: '1' })}
-                      className="w-9 h-9 rounded-lg text-sm font-medium border border-slate-200 text-slate-600 hover:border-brand-300 transition-all">1</button>
+                      className="w-9 h-9 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300 transition-all">1</button>
                     {getPageNumbers()[0] > 2 && <span className="text-slate-400 px-1">…</span>}
                   </>
                 )}
@@ -264,7 +264,7 @@ export default function SearchPage() {
                     className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                       page === currentPage
                         ? 'bg-brand-500 text-white shadow-orange'
-                        : 'border border-slate-200 text-slate-600 hover:border-brand-300'
+                        : 'border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300'
                     }`}
                     aria-current={page === currentPage ? 'page' : undefined}
                   >
@@ -276,7 +276,7 @@ export default function SearchPage() {
                   <>
                     {getPageNumbers().at(-1)! < totalPages - 1 && <span className="text-slate-400 px-1">…</span>}
                     <button onClick={() => setFilters({ page: String(totalPages) })}
-                      className="w-9 h-9 rounded-lg text-sm font-medium border border-slate-200 text-slate-600 hover:border-brand-300 transition-all">
+                      className="w-9 h-9 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300 transition-all">
                       {totalPages}
                     </button>
                   </>
@@ -285,7 +285,7 @@ export default function SearchPage() {
                 <button
                   onClick={() => setFilters({ page: String(currentPage + 1) })}
                   disabled={currentPage >= totalPages}
-                  className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   aria-label="Trang sau"
                 >
                   <ChevronRight className="w-4 h-4" />

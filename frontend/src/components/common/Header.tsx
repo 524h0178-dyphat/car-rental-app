@@ -251,7 +251,7 @@ export default function Header() {
                 <Link to="/dang-nhap" className={`flex items-center gap-1.5 py-2 px-4 text-sm rounded-xl font-semibold border-2 transition-all duration-200 ${
                   isTransparent
                     ? 'border-white/40 text-white hover:bg-white/10'
-                    : 'border-brand-500 text-brand-500 hover:bg-brand-50'
+                    : 'border-brand-500 text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/30 dark:text-brand-400 dark:border-brand-400'
                 }`}>
                   <User className="w-4 h-4" />
                   Đăng nhập

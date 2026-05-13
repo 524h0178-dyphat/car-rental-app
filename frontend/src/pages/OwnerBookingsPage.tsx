@@ -9,11 +9,11 @@ import type { Booking, BookingStatus } from '@/types/booking';
 
 // ── Status badge ─────────────────────────────────────────────────────────────
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string; icon: React.ElementType }> = {
-  pending:   { label: 'Chờ duyệt',    color: 'bg-amber-100 text-amber-700',  icon: Clock        },
-  confirmed: { label: 'Đã duyệt',     color: 'bg-blue-100 text-blue-700',    icon: CheckCircle2 },
-  active:    { label: 'Đang cho thuê', color: 'bg-green-100 text-green-700',   icon: Truck        },
-  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600',   icon: CheckCircle2 },
-  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600',       icon: XCircle      },
+  pending:   { label: 'Chờ duyệt',    color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',  icon: Clock        },
+  confirmed: { label: 'Đã duyệt',     color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',    icon: CheckCircle2 },
+  active:    { label: 'Đang cho thuê', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',   icon: Truck        },
+  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200',   icon: CheckCircle2 },
+  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',       icon: XCircle      },
 };
 
 function StatusBadge({ status }: { status: BookingStatus }) {
@@ -50,12 +50,12 @@ function RejectDialog({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-slate-900">Từ chối đơn thuê xe</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Từ chối đơn thuê xe</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center">
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
-        <p className="text-slate-600 text-sm mb-4">
+        <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
           Bạn đang từ chối đơn đặt xe này. Hãy cho khách hàng biết lý do (xe bận, bảo dưỡng...).
         </p>
         <div className="mb-5">
@@ -128,28 +128,28 @@ function OwnerBookingCard({ booking }: { booking: Booking }) {
                 <p className="text-xs text-slate-400 mb-0.5 font-mono">
                   #{String(booking.id).padStart(6, '0')}
                 </p>
-                <h3 className="font-semibold text-slate-900 truncate">
+                <h3 className="font-semibold text-slate-900 dark:text-white truncate">
                   {booking.car?.name ?? 'Xe của bạn'}
                 </h3>
               </div>
               <StatusBadge status={booking.status} />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-slate-500 mb-4 bg-slate-50 p-3 rounded-xl">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
               <div className="col-span-2 sm:col-span-1">
                 <span className="block text-xs text-slate-400 mb-0.5">Khách thuê</span>
-                <div className="flex items-center gap-1 text-slate-900 font-medium">
+                <div className="flex items-center gap-1 text-slate-900 dark:text-white font-medium">
                   <UserIcon className="w-3.5 h-3.5 text-brand-400" />
                   <span className="truncate">{booking.renter_name}</span>
                 </div>
               </div>
               <div className="col-span-2 sm:col-span-1">
                 <span className="block text-xs text-slate-400 mb-0.5">Lịch trình</span>
-                <span className="text-slate-900">{formatDate(booking.start_date)} - {formatDate(booking.end_date)}</span>
+                <span className="text-slate-900 dark:text-white">{formatDate(booking.start_date)} - {formatDate(booking.end_date)}</span>
               </div>
               <div>
                 <span className="block text-xs text-slate-400 mb-0.5">Thời gian</span>
-                <span className="text-slate-900">{booking.total_days} ngày</span>
+                <span className="text-slate-900 dark:text-white">{booking.total_days} ngày</span>
               </div>
               <div>
                 <span className="block text-xs text-slate-400 mb-0.5">Thu nhập</span>
@@ -159,7 +159,7 @@ function OwnerBookingCard({ booking }: { booking: Booking }) {
 
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                booking.payout_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                booking.payout_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:text-slate-400'
               }`}>
                 {booking.payout_status === 'paid' ? '✓ Đã nhận tiền' : '⏳ Chờ thanh toán'}
               </span>
@@ -192,7 +192,7 @@ function OwnerBookingCard({ booking }: { booking: Booking }) {
                   </button>
                 )}
                 {booking.status === 'confirmed' && booking.handed_over_at && (
-                  <span className="text-xs text-slate-500 italic">⏳ Chờ khách xác nhận nhận xe</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 italic">⏳ Chờ khách xác nhận nhận xe</span>
                 )}
                 {booking.status === 'active' && (
                   <button
@@ -236,11 +236,11 @@ export default function OwnerBookingsPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">Quản lý xe cho thuê</h1>
-          <p className="text-slate-500 mt-1">Quản lý các yêu cầu thuê xe của khách hàng</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Quản lý xe cho thuê</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Quản lý các yêu cầu thuê xe của khách hàng</p>
         </div>
 
         <div className="flex gap-1 overflow-x-auto pb-2 mb-6 -mx-1 px-1">
@@ -251,7 +251,7 @@ export default function OwnerBookingsPage() {
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 tab === value
                   ? 'bg-brand-500 text-white shadow-orange'
-                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300'
+                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:border-brand-300'
               }`}
             >
               {label}
@@ -270,14 +270,14 @@ export default function OwnerBookingsPage() {
         {isError && (
           <div className="text-center py-16">
             <AlertCircle className="w-12 h-12 text-red-300 mx-auto mb-3" />
-            <p className="text-slate-500">Không thể tải danh sách đơn.</p>
+            <p className="text-slate-500 dark:text-slate-400">Không thể tải danh sách đơn.</p>
           </div>
         )}
 
         {!isLoading && !isError && (!filtered || filtered.length === 0) && (
           <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700">
             <Car className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-500 font-medium">Chưa có yêu cầu thuê xe nào</p>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Chưa có yêu cầu thuê xe nào</p>
           </div>
         )}
 
@@ -292,7 +292,7 @@ export default function OwnerBookingsPage() {
         {data?.meta && data.meta.last_page > 1 && (
           <div className="flex justify-center gap-2 mt-8">
             <button onClick={() => setPage(p => p - 1)} disabled={page <= 1} className="px-4 py-2 rounded-xl border border-slate-200 text-sm">Trước</button>
-            <span className="px-4 py-2 text-sm text-slate-500">Trang {page} / {data.meta.last_page}</span>
+            <span className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400">Trang {page} / {data.meta.last_page}</span>
             <button onClick={() => setPage(p => p + 1)} disabled={page >= data.meta.last_page} className="px-4 py-2 rounded-xl border border-slate-200 text-sm">Sau</button>
           </div>
         )}

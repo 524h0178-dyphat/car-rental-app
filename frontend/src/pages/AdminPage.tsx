@@ -31,8 +31,8 @@ function StatCard({
         <Icon className="w-6 h-6 text-white" />
       </div>
       <div>
-        <p className="text-sm text-slate-500 mb-1">{label}</p>
-        <p className="text-2xl font-bold text-slate-900">{value}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">{label}</p>
+        <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
         {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
       </div>
     </div>
@@ -41,11 +41,11 @@ function StatCard({
 
 // ── Status badge ─────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<BookingStatus, { label: string; color: string; icon: React.ElementType }> = {
-  pending:   { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-700',  icon: Clock        },
-  confirmed: { label: 'Đã xác nhận',  color: 'bg-blue-100 text-blue-700',    icon: CheckCircle2 },
-  active:    { label: 'Đang thuê',    color: 'bg-green-100 text-green-700',   icon: Truck        },
-  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600',   icon: CheckCircle2 },
-  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600',       icon: XCircle      },
+  pending:   { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',  icon: Clock        },
+  confirmed: { label: 'Đã xác nhận',  color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',    icon: CheckCircle2 },
+  active:    { label: 'Đang thuê',    color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',   icon: Truck        },
+  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200',   icon: CheckCircle2 },
+  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',       icon: XCircle      },
 };
 
 function StatusBadge({ status }: { status: BookingStatus }) {
@@ -87,7 +87,7 @@ function StatusUpdater({ id, current }: { id: number; current: BookingStatus }) 
               })
             }
             disabled={update.isPending}
-            className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             → {STATUS_CFG[s].label}
           </button>
@@ -132,7 +132,7 @@ function SubmissionStatusUpdater({ item }: { item: CarSubmissionItem }) {
                 }
               )}
               disabled={update.isPending}
-              className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               → {SUB_STATUS_CFG[s].label}
             </button>
@@ -154,7 +154,7 @@ function CarSubmissionsTable() {
   return (
     <div className="card overflow-hidden">
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
-        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+        <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
           <FileText className="w-5 h-5 text-brand-500" />
           Quản lý xe ký gửi
         </h2>
@@ -162,7 +162,7 @@ function CarSubmissionsTable() {
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
             aria-label="Lọc trạng thái"
           >
             <option value="">Tất cả trạng thái</option>
@@ -178,21 +178,21 @@ function CarSubmissionsTable() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { setQuery(search); setPage(1); } }}
-              className="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+              className="pl-8 pr-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:text-white"
             />
           </div>
           <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
-            <RefreshCw className="w-4 h-4 text-slate-500" />
+            <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-100">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
             <tr>
               {['Mã', 'Xe', 'Chủ xe', 'Biển số', 'Giá dự kiến/ngày', 'Tỉnh/TP', 'Trạng thái'].map((h) => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{h}</th>
               ))}
             </tr>
           </thead>
@@ -215,18 +215,18 @@ function CarSubmissionsTable() {
                 )
                 : data.data.map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">#{String(s.id).padStart(4, '0')}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">#{String(s.id).padStart(4, '0')}</td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-800">{s.brand} {s.model}</p>
+                      <p className="font-medium text-slate-800 dark:text-white">{s.brand} {s.model}</p>
                       <p className="text-xs text-slate-400">{s.year} · {s.seats} chỗ · {s.fuel}</p>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-800">{s.owner_name}</p>
+                      <p className="font-medium text-slate-800 dark:text-white">{s.owner_name}</p>
                       <p className="text-xs text-slate-400">{s.owner_phone}</p>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-700">{s.license_plate}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-900">{formatPrice(s.expected_price_per_day)}</td>
-                    <td className="px-4 py-3 text-slate-600 text-xs">{s.location_province}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-700 dark:text-slate-300">{s.license_plate}</td>
+                    <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{formatPrice(s.expected_price_per_day)}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs">{s.location_province}</td>
                     <td className="px-4 py-3"><SubmissionStatusUpdater item={s} /></td>
                   </tr>
                 ))
@@ -237,10 +237,10 @@ function CarSubmissionsTable() {
 
       {data?.meta && data.meta.last_page > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-          <p className="text-xs text-slate-500">{data.meta.total} yêu cầu · Trang {page}/{data.meta.last_page}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{data.meta.total} yêu cầu · Trang {page}/{data.meta.last_page}</p>
           <div className="flex gap-2">
-            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
-            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
           </div>
         </div>
       )}
@@ -261,7 +261,7 @@ function BookingsTable() {
     <div className="card overflow-hidden">
       {/* Toolbar */}
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
-        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+        <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
           <Calendar className="w-5 h-5 text-brand-500" />
           Quản lý đơn thuê xe
         </h2>
@@ -270,7 +270,7 @@ function BookingsTable() {
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
             aria-label="Lọc theo trạng thái"
           >
             <option value="">Tất cả trạng thái</option>
@@ -288,7 +288,7 @@ function BookingsTable() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { setQuery(search); setPage(1); } }}
-              className="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+              className="pl-8 pr-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:text-white"
             />
           </div>
 
@@ -297,7 +297,7 @@ function BookingsTable() {
             className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
             aria-label="Tải lại"
           >
-            <RefreshCw className="w-4 h-4 text-slate-500" />
+            <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
       </div>
@@ -305,10 +305,10 @@ function BookingsTable() {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-100">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
             <tr>
               {['Mã đơn', 'Xe', 'Người thuê', 'Thời gian', 'Tổng tiền', 'Trạng thái'].map((h) => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                   {h}
                 </th>
               ))}
@@ -327,7 +327,7 @@ function BookingsTable() {
                 ))
               : data?.data?.map((b: any) => (
                   <tr key={b.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">
                       #{String(b.id).padStart(6, '0')}
                     </td>
                     <td className="px-4 py-3">
@@ -335,17 +335,17 @@ function BookingsTable() {
                         <Link to={`/xe/${b.car.slug}`} className="text-brand-600 hover:underline font-medium truncate block max-w-[140px]">
                           {b.car?.name ?? '—'}
                         </Link>
-                      ) : <span className="text-slate-500">—</span>}
+                      ) : <span className="text-slate-500 dark:text-slate-400">—</span>}
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-800">{b.renter_name}</p>
+                      <p className="font-medium text-slate-800 dark:text-white">{b.renter_name}</p>
                       <p className="text-xs text-slate-400">{b.renter_phone}</p>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                       <p>{b.start_date}</p>
                       <p className="text-xs text-slate-400">{b.total_days} ngày</p>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-slate-900">
+                    <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">
                       {formatPrice(b.total_price)}
                     </td>
                     <td className="px-4 py-3">
@@ -360,16 +360,16 @@ function BookingsTable() {
       {/* Pagination */}
       {data?.meta && data.meta.last_page > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {data.meta.total} đơn · Trang {page}/{data.meta.last_page}
           </p>
           <div className="flex gap-2">
             <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1}
-              className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
               ← Trước
             </button>
             <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page}
-              className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
               Sau →
             </button>
           </div>
@@ -405,14 +405,14 @@ function UsersTable() {
   return (
     <div className="card overflow-hidden">
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
-        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+        <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
           <Users className="w-5 h-5 text-brand-500" /> Quản lý thành viên
         </h2>
         <div className="flex gap-2 flex-wrap">
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
           >
             <option value="">Tất cả</option>
             <option value="active">Đang hoạt động</option>
@@ -426,20 +426,20 @@ function UsersTable() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { setQuery(search); setPage(1); } }}
-              className="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+              className="pl-8 pr-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:text-white"
             />
           </div>
           <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
-            <RefreshCw className="w-4 h-4 text-slate-500" />
+            <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-100">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
             <tr>
               {['ID', 'Tên', 'Email', 'Điện thoại', 'Trạng thái', 'Ngày tạo', 'Hành động'].map((h) => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{h}</th>
               ))}
             </tr>
           </thead>
@@ -456,10 +456,10 @@ function UsersTable() {
                 ? (<tr><td colSpan={7} className="px-4 py-12 text-center text-slate-400 text-sm">Không có người dùng nào.</td></tr>)
                 : data.data.map((u) => (
                   <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">#{u.id}</td>
-                    <td className="px-4 py-3 font-medium text-slate-800">{u.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{u.email}</td>
-                    <td className="px-4 py-3 text-slate-600">{u.phone ?? '—'}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">#{u.id}</td>
+                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-white">{u.name}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{u.email}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{u.phone ?? '—'}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
                         u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'
@@ -467,7 +467,7 @@ function UsersTable() {
                         {u.status === 'active' ? <><CheckCircle2 className="w-3 h-3" />Hoạt động</> : <><XCircle className="w-3 h-3" />Đã khóa</>}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{new Date(u.created_at).toLocaleDateString('vi-VN')}</td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{new Date(u.created_at).toLocaleDateString('vi-VN')}</td>
                     <td className="px-4 py-3">
                       <button
                         id={`toggle-user-${u.id}`}
@@ -490,10 +490,10 @@ function UsersTable() {
       </div>
       {data?.meta && data.meta.last_page > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-          <p className="text-xs text-slate-500">{data.meta.total} người dùng · Trang {page}/{data.meta.last_page}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{data.meta.total} người dùng · Trang {page}/{data.meta.last_page}</p>
           <div className="flex gap-2">
-            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
-            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
           </div>
         </div>
       )}
@@ -527,30 +527,30 @@ function ReviewsTable() {
   return (
     <div className="card overflow-hidden">
       <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
-        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+        <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
           <Star className="w-5 h-5 text-brand-500" /> Kiểm duyệt đánh giá
         </h2>
         <div className="flex gap-2">
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+            className="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
           >
             <option value="">Tất cả</option>
             <option value="visible">Hiển thị</option>
             <option value="hidden">Đã ẩn</option>
           </select>
           <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
-            <RefreshCw className="w-4 h-4 text-slate-500" />
+            <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-100">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
             <tr>
               {['ID', 'Người dùng', 'Xe', 'Sao', 'Nhận xét', 'Trạng thái', 'Hành động'].map((h) => (
-                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{h}</th>
               ))}
             </tr>
           </thead>
@@ -567,9 +567,9 @@ function ReviewsTable() {
                 ? (<tr><td colSpan={7} className="px-4 py-12 text-center text-slate-400 text-sm">Chưa có đánh giá nào.</td></tr>)
                 : data.data.map((r) => (
                   <tr key={r.id} className={`hover:bg-slate-50/50 transition-colors ${r.deleted_at ? 'opacity-50' : ''}`}>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500">#{r.id}</td>
-                    <td className="px-4 py-3 text-slate-700">{r.user?.name ?? '—'}</td>
-                    <td className="px-4 py-3 text-slate-600 text-xs">{r.car?.name ?? '—'}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">#{r.id}</td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-300">{r.user?.name ?? '—'}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs">{r.car?.name ?? '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -577,10 +577,10 @@ function ReviewsTable() {
                         ))}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-600 max-w-[200px] truncate">{r.comment ?? <span className="text-slate-300 italic">—</span>}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300 max-w-[200px] truncate">{r.comment ?? <span className="text-slate-300 italic">—</span>}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                        r.status === 'visible' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                        r.status === 'visible' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:text-slate-400'
                       }`}>
                         {r.status === 'visible' ? 'Hiển thị' : 'Đã ẩn'}
                       </span>
@@ -619,10 +619,10 @@ function ReviewsTable() {
       </div>
       {data?.meta && data.meta.last_page > 1 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
-          <p className="text-xs text-slate-500">{data.meta.total} đánh giá · Trang {page}/{data.meta.last_page}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{data.meta.total} đánh giá · Trang {page}/{data.meta.last_page}</p>
           <div className="flex gap-2">
-            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
-            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
           </div>
         </div>
       )}
@@ -644,17 +644,17 @@ export default function AdminPage() {
   const MONTH_NAMES = ['', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <BarChart3 className="w-7 h-7 text-brand-500" />
               Admin Dashboard
             </h1>
-            <p className="text-slate-500 text-sm mt-1">Quản lý xe và đơn thuê của SkibidiCar</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Quản lý xe và đơn thuê của SkibidiCar</p>
           </div>
           <Link to="/" className="btn-outline text-sm py-2 px-4">
             Xem trang web
@@ -685,7 +685,7 @@ export default function AdminPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Status distribution */}
             <div className="card p-6">
-              <h2 className="font-semibold text-slate-900 mb-4">Trạng thái đơn</h2>
+              <h2 className="font-semibold text-slate-900 dark:text-white mb-4">Trạng thái đơn</h2>
               <div className="space-y-3">
                 {Object.entries(STATUS_CFG).map(([key, cfg]) => {
                   const count = stats.bookings_status?.[key as BookingStatus] ?? 0;
@@ -697,7 +697,7 @@ export default function AdminPage() {
                         <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.color}`}>
                           <Icon className="w-3 h-3" />{cfg.label}
                         </span>
-                        <span className="text-xs font-semibold text-slate-700">{count}</span>
+                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{count}</span>
                       </div>
                       <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                         <div className="h-full bg-brand-400 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
@@ -710,7 +710,7 @@ export default function AdminPage() {
 
             {/* Monthly revenue chart (simple bar) */}
             <div className="card p-6 lg:col-span-2">
-              <h2 className="font-semibold text-slate-900 mb-4">Doanh thu 6 tháng gần nhất</h2>
+              <h2 className="font-semibold text-slate-900 dark:text-white mb-4">Doanh thu 6 tháng gần nhất</h2>
               {stats.monthly_revenue.length === 0 ? (
                 <div className="h-32 flex items-center justify-center text-slate-400 text-sm">Chưa có dữ liệu</div>
               ) : (
@@ -752,7 +752,7 @@ export default function AdminPage() {
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors flex-shrink-0 ${
                 activeTab === key
                   ? 'border-brand-500 text-brand-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-700'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300'
               }`}
             >
               <Icon className="w-4 h-4" /> {label}

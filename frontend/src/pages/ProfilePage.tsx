@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useUpdateProfile, useChangePassword } from '@/hooks/useAuth';
 import { useMyBookings } from '@/hooks/useBooking';
 import { formatPrice } from '@/utils/formatters';
+import EmailOtpModal from '@/components/common/EmailOtpModal';
 
 type Tab = 'profile' | 'security' | 'bookings' | 'submissions';
 
@@ -37,6 +38,7 @@ function ProfileTab() {
     email: user?.email ?? '',
     phone: user?.phone ?? '',
   });
+  const [modalMode, setModalMode] = useState<'verify' | 'change' | null>(null);
 
   useEffect(() => {
     if (user) setForm({ name: user.name, email: user.email, phone: user.phone ?? '' });
@@ -56,15 +58,16 @@ function ProfileTab() {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="flex items-center gap-5 pb-5 border-b border-slate-100">
         <BigAvatar name={user?.name ?? 'U'} />
         <div>
-          <h3 className="font-bold text-slate-900 text-lg">{user?.name}</h3>
+          <h3 className="font-bold text-slate-900 dark:text-white text-lg">{user?.name}</h3>
           <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
             user?.role === 'admin'
               ? 'bg-brand-100 text-brand-700'
-              : 'bg-slate-100 text-slate-500'
+              : 'bg-slate-100 text-slate-500 dark:text-slate-400'
           }`}>
             {user?.role === 'admin' ? '⭐ Admin' : '👤 Khách hàng'}
           </span>
@@ -73,21 +76,31 @@ function ProfileTab() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label htmlFor="p-name" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="p-name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <User className="inline w-4 h-4 mr-1 text-brand-500" />Họ và tên
           </label>
           <input id="p-name" type="text" value={form.name} onChange={set('name')}
             required className="input-field" />
         </div>
         <div>
-          <label htmlFor="p-email" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="p-email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <Mail className="inline w-4 h-4 mr-1 text-brand-500" />Email
           </label>
-          <input id="p-email" type="email" value={form.email} onChange={set('email')}
-            required className="input-field" />
+          <div className="relative">
+            <input id="p-email" type="email" value={form.email} onChange={set('email')}
+              disabled
+              required className="input-field disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-500 dark:text-slate-400 disabled:opacity-70 disabled:cursor-not-allowed" />
+          </div>
+          <div className="mt-1.5">
+            {user?.email_verified_at ? (
+              <button type="button" onClick={() => setModalMode('change')} className="text-xs text-brand-600 hover:text-brand-700 dark:text-brand-400 font-medium">Đổi email</button>
+            ) : (
+              <button type="button" onClick={() => setModalMode('verify')} className="text-xs text-brand-600 hover:text-brand-700 dark:text-brand-400 font-medium underline">Xác thực ngay</button>
+            )}
+          </div>
         </div>
         <div>
-          <label htmlFor="p-phone" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="p-phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <Phone className="inline w-4 h-4 mr-1 text-brand-500" />Số điện thoại
           </label>
           <input id="p-phone" type="tel" value={form.phone} onChange={set('phone')}
@@ -104,6 +117,15 @@ function ProfileTab() {
         {updateProfile.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
       </button>
     </form>
+
+    {modalMode && (
+      <EmailOtpModal
+        mode={modalMode}
+        isOpen={true}
+        onClose={() => setModalMode(null)}
+      />
+    )}
+    </>
   );
 }
 
@@ -139,7 +161,7 @@ function SecurityTab() {
 
       {/* Current password */}
       <div>
-        <label htmlFor="cp-current" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label htmlFor="cp-current" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
           Mật khẩu hiện tại
         </label>
         <div className="relative">
@@ -158,11 +180,16 @@ function SecurityTab() {
             {show.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
+        <div className="mt-1.5 text-right">
+          <Link to="/quen-mat-khau" className="text-xs text-brand-600 hover:text-brand-700 dark:text-brand-400 font-medium">
+            Quên mật khẩu?
+          </Link>
+        </div>
       </div>
 
       {/* New password */}
       <div>
-        <label htmlFor="cp-new" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label htmlFor="cp-new" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
           Mật khẩu mới
         </label>
         <div className="relative">
@@ -200,7 +227,7 @@ function SecurityTab() {
 
       {/* Confirm password */}
       <div>
-        <label htmlFor="cp-confirm" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label htmlFor="cp-confirm" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
           Xác nhận mật khẩu mới
         </label>
         <div className="relative">
@@ -263,7 +290,7 @@ function BookingsSummaryTab() {
   if (!data?.data?.length) return (
     <div className="text-center py-12">
       <Car className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-      <p className="text-slate-500 mb-4">Chưa có đơn thuê xe nào</p>
+      <p className="text-slate-500 dark:text-slate-400 mb-4">Chưa có đơn thuê xe nào</p>
       <Link to="/tim-xe" className="btn-primary text-sm py-2 px-5">Thuê xe ngay</Link>
     </div>
   );
@@ -274,7 +301,7 @@ function BookingsSummaryTab() {
         <div key={b.id} className="flex items-center justify-between gap-3 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
           <div className="flex-1 min-w-0">
             <p className="font-medium text-slate-800 truncate text-sm">{b.car?.name ?? 'Xe đã đặt'}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {new Date(b.start_date).toLocaleDateString('vi-VN')} → {new Date(b.end_date).toLocaleDateString('vi-VN')}
             </p>
           </div>
@@ -323,7 +350,7 @@ function SubmissionsSummaryTab() {
   if (!data?.data?.length) return (
     <div className="text-center py-12">
       <Car className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-      <p className="text-slate-500 mb-4">Bạn chưa ký gửi xe nào</p>
+      <p className="text-slate-500 dark:text-slate-400 mb-4">Bạn chưa ký gửi xe nào</p>
       <Link to="/ky-gui-xe" className="btn-primary text-sm py-2 px-5">Đăng ký ký gửi ngay</Link>
     </div>
   );
@@ -334,7 +361,7 @@ function SubmissionsSummaryTab() {
         <div key={s.id} className="flex items-center justify-between gap-3 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
           <div className="flex-1 min-w-0">
             <p className="font-medium text-slate-800 truncate text-sm">{s.brand} {s.model}</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Biển số: {s.license_plate} • Ngày gửi: {new Date(s.created_at).toLocaleDateString('vi-VN')}
             </p>
           </div>
@@ -362,12 +389,12 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<Tab>('profile');
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">Tài khoản của tôi</h1>
-          <p className="text-slate-500 text-sm mt-1">{user?.email}</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Tài khoản của tôi</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{user?.email}</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
@@ -390,10 +417,17 @@ export default function ProfilePage() {
               ))}
 
               <div className="hidden lg:block border-t border-slate-100 pt-2 mt-2">
-                <div className="flex items-center gap-2 px-4 py-2">
-                  <BadgeCheck className="w-4 h-4 text-green-500" />
-                  <span className="text-xs text-slate-500">Tài khoản đã xác minh</span>
-                </div>
+                {user?.email_verified_at ? (
+                  <div className="flex items-center gap-2 px-4 py-2">
+                    <BadgeCheck className="w-4 h-4 text-green-500" />
+                    <span className="text-xs text-slate-500 dark:text-slate-400">Tài khoản đã xác minh</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 px-4 py-2">
+                    <Shield className="w-4 h-4 text-amber-500" />
+                    <span className="text-xs text-amber-600 font-medium">Tài khoản chưa xác minh</span>
+                  </div>
+                )}
               </div>
             </nav>
           </aside>

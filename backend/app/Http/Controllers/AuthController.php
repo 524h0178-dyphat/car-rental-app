@@ -173,7 +173,7 @@ class AuthController extends Controller
         }
 
         // Check if OTP is expired (e.g., 15 minutes)
-        if (now()->diffInMinutes($record->created_at) > 15) {
+        if (abs(now()->diffInMinutes($record->created_at)) > 15) {
             return response()->json(['message' => 'Mã OTP đã hết hạn.'], 400);
         }
 
@@ -199,6 +199,101 @@ class AuthController extends Controller
         return response()->json(['message' => 'Mật khẩu đã được đặt lại thành công!']);
     }
 
+    public function requestVerification(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'Email đã được xác thực.'], 400);
+        }
+
+        $otp = (string) rand(100000, 999999);
+        \Log::info('[RequestVerification] Generated OTP for ' . $user->email . ': ' . $otp);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            ['token' => Hash::make($otp), 'created_at' => now()]
+        );
+        Mail::to($user->email)->send(new OtpMail($otp, 'verify_email'));
+
+        return response()->json(['message' => 'Mã OTP đã được gửi đến email của bạn.']);
+    }
+
+    public function verifyEmail(Request $request): JsonResponse
+    {
+        $request->validate(['otp' => 'required|string']);
+        $user = $request->user();
+
+        $record = DB::table('password_reset_tokens')->where('email', $user->email)->first();
+
+        if (!$record) {
+            \Log::warning('[VerifyEmail] No token record found for email: ' . $user->email);
+            return response()->json(['message' => 'Không tìm thấy mã OTP. Vui lòng gửi lại mã.'], 400);
+        }
+
+        if (!Hash::check($request->otp, $record->token)) {
+            \Log::warning('[VerifyEmail] OTP mismatch for email: ' . $user->email . ', input: ' . $request->otp);
+            return response()->json(['message' => 'Mã OTP không chính xác.'], 400);
+        }
+
+        if (abs(now()->diffInMinutes($record->created_at)) > 15) {
+            \Log::warning('[VerifyEmail] OTP expired for email: ' . $user->email);
+            return response()->json(['message' => 'Mã OTP đã hết hạn. Vui lòng gửi lại mã mới.'], 400);
+        }
+
+        $user->email_verified_at = now();
+        $user->save();
+        
+        DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+
+        return response()->json([
+            'message' => 'Xác thực email thành công!',
+            'data' => $this->formatUser($user->fresh())
+        ]);
+    }
+
+    public function requestEmailChange(Request $request): JsonResponse
+    {
+        $request->validate([
+            'new_email' => 'required|email|unique:users,email'
+        ]);
+        
+        $email = $request->new_email;
+        $otp = (string) rand(100000, 999999);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            ['token' => Hash::make($otp), 'created_at' => now()]
+        );
+        Mail::to($email)->send(new OtpMail($otp, 'change_email'));
+
+        return response()->json(['message' => 'Mã OTP đã được gửi đến email mới.']);
+    }
+
+    public function verifyEmailChange(Request $request): JsonResponse
+    {
+        $request->validate([
+            'new_email' => 'required|email|unique:users,email',
+            'otp' => 'required|string'
+        ]);
+
+        $user = $request->user();
+        $record = DB::table('password_reset_tokens')->where('email', $request->new_email)->first();
+
+        if (!$record || !Hash::check($request->otp, $record->token) || abs(now()->diffInMinutes($record->created_at)) > 15) {
+            return response()->json(['message' => 'Mã OTP không chính xác hoặc đã hết hạn.'], 400);
+        }
+
+        $user->update([
+            'email' => $request->new_email,
+            'email_verified_at' => now()
+        ]);
+        DB::table('password_reset_tokens')->where('email', $request->new_email)->delete();
+
+        return response()->json([
+            'message' => 'Đổi email thành công!',
+            'data' => $this->formatUser($user->fresh())
+        ]);
+    }
+
     /**
      * Format user for response (no sensitive fields).
      */
@@ -208,6 +303,7 @@ class AuthController extends Controller
             'id'     => $user->id,
             'name'   => $user->name,
             'email'  => $user->email,
+            'email_verified_at' => $user->email_verified_at,
             'phone'  => $user->phone,
             'avatar' => $user->avatar,
             'role'   => $user->role,

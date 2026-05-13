@@ -20,7 +20,7 @@ const FilterCheckbox = memo(({ label, checked, onChange, id }: FilterCheckboxPro
       onChange={onChange}
       className="w-4 h-4 rounded border-slate-300 text-brand-500 focus:ring-brand-400"
     />
-    <span className="text-sm text-slate-700 group-hover:text-slate-900 transition-colors">
+    <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
       {label}
     </span>
   </label>
@@ -29,7 +29,7 @@ const FilterCheckbox = memo(({ label, checked, onChange, id }: FilterCheckboxPro
 function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="text-sm font-semibold text-slate-700 mb-3 pb-2 border-b border-slate-100">
+      <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 pb-2 border-b border-slate-100 dark:border-slate-700">
         {title}
       </h3>
       {children}
@@ -60,10 +60,10 @@ export default function FilterSidebar() {
       <div className="flex flex-col gap-4 animate-pulse">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i}>
-            <div className="h-4 bg-slate-100 rounded mb-3" />
+            <div className="h-4 bg-slate-100 dark:bg-slate-700 rounded mb-3" />
             <div className="flex flex-col gap-2">
               {Array.from({ length: 3 }).map((_, j) => (
-                <div key={j} className="h-4 bg-slate-50 rounded w-3/4" />
+                <div key={j} className="h-4 bg-slate-50 dark:bg-slate-800 rounded w-3/4" />
               ))}
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function FilterSidebar() {
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="w-5 h-5 text-brand-500" />
-          <h2 className="font-semibold text-slate-900">Bộ lọc</h2>
+          <h2 className="font-semibold text-slate-900 dark:text-white">Bộ lọc</h2>
         </div>
         <button
           onClick={resetFilters}
@@ -120,7 +120,7 @@ export default function FilterSidebar() {
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
                     seatsArr.includes(String(s))
                       ? 'bg-brand-500 text-white border-brand-500 shadow-orange'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-brand-300'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-300'
                   }`}
                   aria-pressed={seatsArr.includes(String(s))}
                 >
@@ -193,7 +193,7 @@ export default function FilterSidebar() {
           )}
           <div className="flex flex-col gap-3">
             <div>
-              <label htmlFor="price-min" className="text-xs text-slate-500 mb-1 block">
+              <label htmlFor="price-min" className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">
                 Giá tối thiểu
               </label>
               <input
@@ -208,7 +208,7 @@ export default function FilterSidebar() {
               />
             </div>
             <div>
-              <label htmlFor="price-max" className="text-xs text-slate-500 mb-1 block">
+              <label htmlFor="price-max" className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">
                 Giá tối đa
               </label>
               <input

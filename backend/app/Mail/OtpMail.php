@@ -15,13 +15,15 @@ class OtpMail extends Mailable
     use Queueable, SerializesModels;
 
     public $otp;
+    public $type;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($otp)
+    public function __construct($otp, $type = 'forgot_password')
     {
         $this->otp = $otp;
+        $this->type = $type;
     }
 
     /**
@@ -29,8 +31,14 @@ class OtpMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = match($this->type) {
+            'verify_email' => 'Xác nhận địa chỉ email - SkibidiCar',
+            'change_email' => 'Xác nhận đổi địa chỉ email - SkibidiCar',
+            default => 'Mã xác nhận quên mật khẩu - SkibidiCar',
+        };
+
         return new Envelope(
-            subject: 'Mã xác nhận quên mật khẩu - SkibidiCar',
+            subject: $subject,
         );
     }
 
@@ -41,6 +49,7 @@ class OtpMail extends Mailable
     {
         return new Content(
             view: 'emails.otp',
+            with: ['type' => $this->type],
         );
     }
 

@@ -10,11 +10,11 @@ import type { Booking, BookingStatus } from '@/types/booking';
 
 // ── Status badge ─────────────────────────────────────────────────────────────
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string; icon: React.ElementType }> = {
-  pending:   { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-700',  icon: Clock        },
-  confirmed: { label: 'Đã xác nhận',  color: 'bg-blue-100 text-blue-700',    icon: CheckCircle2 },
-  active:    { label: 'Đang thuê',    color: 'bg-green-100 text-green-700',   icon: Truck        },
-  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600',   icon: CheckCircle2 },
-  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600',       icon: XCircle      },
+  pending:   { label: 'Chờ xác nhận', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',  icon: Clock        },
+  confirmed: { label: 'Đã xác nhận',  color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',    icon: CheckCircle2 },
+  active:    { label: 'Đang thuê',    color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',   icon: Truck        },
+  completed: { label: 'Hoàn thành',   color: 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200',   icon: CheckCircle2 },
+  cancelled: { label: 'Đã hủy',       color: 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400',       icon: XCircle      },
 };
 
 function StatusBadge({ status }: { status: BookingStatus }) {
@@ -55,20 +55,20 @@ function CancelDialog({
     >
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
         <div className="flex items-center justify-between mb-4">
-          <h2 id="cancel-dialog-title" className="text-lg font-bold text-slate-900">Hủy đơn thuê xe</h2>
+          <h2 id="cancel-dialog-title" className="text-lg font-bold text-slate-900 dark:text-white">Hủy đơn thuê xe</h2>
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors"
             aria-label="Đóng"
           >
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
-        <p className="text-slate-600 text-sm mb-4">
+        <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
           Bạn có chắc muốn hủy đơn này? Hành động này không thể hoàn tác.
         </p>
         <div className="mb-5">
-          <label htmlFor="cancel-reason" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="cancel-reason" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Lý do hủy <span className="text-slate-400 font-normal">(tùy chọn)</span>
           </label>
           <textarea
@@ -139,7 +139,7 @@ function BookingCard({ booking }: { booking: Booking }) {
                 <p className="text-xs text-slate-400 mb-0.5 font-mono">
                   #{String(booking.id).padStart(6, '0')}
                 </p>
-                <h3 className="font-semibold text-slate-900 truncate">
+                <h3 className="font-semibold text-slate-900 dark:text-white truncate">
                   {booking.car?.name ?? 'Xe đã đặt'}
                 </h3>
               </div>
@@ -147,7 +147,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             </div>
 
             {/* Details */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-500 mb-4">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400 mb-4">
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-brand-400" />
                 <span>{formatDate(booking.start_date)}</span>
@@ -160,7 +160,7 @@ function BookingCard({ booking }: { booking: Booking }) {
                 <Clock className="w-3.5 h-3.5 text-brand-400" />
                 <span>{booking.total_days} ngày</span>
               </div>
-              <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+              <div className="flex items-center gap-1.5 font-semibold text-slate-800 dark:text-white">
                 {formatPrice(booking.total_price)}
               </div>
             </div>
@@ -173,7 +173,7 @@ function BookingCard({ booking }: { booking: Booking }) {
                     ? 'bg-green-100 text-green-700'
                     : booking.payment_status === 'refunded'
                       ? 'bg-purple-100 text-purple-700'
-                      : 'bg-slate-100 text-slate-500'
+                      : 'bg-slate-100 text-slate-500 dark:text-slate-400'
                 }`}>
                   {booking.payment_status === 'paid' ? '✓ Đã thanh toán'
                     : booking.payment_status === 'refunded' ? '↩ Đã hoàn tiền'
@@ -276,14 +276,14 @@ export default function MyBookingsPage() {
     : data?.data.filter((b) => b.status === tab);
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Đơn thuê xe của tôi</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Đơn thuê xe của tôi</h1>
             {data?.meta && (
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                 {data.meta.total} đơn tất cả
               </p>
             )}
@@ -303,7 +303,7 @@ export default function MyBookingsPage() {
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 tab === value
                   ? 'bg-brand-500 text-white shadow-orange'
-                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300'
+                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:border-brand-300'
               }`}
             >
               {label}
@@ -333,7 +333,7 @@ export default function MyBookingsPage() {
         {isError && (
           <div className="text-center py-16">
             <AlertCircle className="w-12 h-12 text-red-300 mx-auto mb-3" />
-            <p className="text-slate-500">Không thể tải danh sách đơn.</p>
+            <p className="text-slate-500 dark:text-slate-400">Không thể tải danh sách đơn.</p>
           </div>
         )}
 
@@ -343,7 +343,7 @@ export default function MyBookingsPage() {
             <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center">
               <Car className="w-10 h-10 text-slate-300" />
             </div>
-            <p className="text-slate-600 font-medium">Chưa có đơn thuê xe nào</p>
+            <p className="text-slate-600 dark:text-slate-300 font-medium">Chưa có đơn thuê xe nào</p>
             <p className="text-sm text-slate-400">Hãy khám phá và đặt xe ngay!</p>
             <Link to="/tim-xe" className="btn-primary mt-2">
               Tìm xe ngay
@@ -366,17 +366,17 @@ export default function MyBookingsPage() {
             <button
               onClick={() => setPage((p) => p - 1)}
               disabled={page <= 1}
-              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               ← Trước
             </button>
-            <span className="px-4 py-2 text-sm text-slate-500">
+            <span className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400">
               Trang {page} / {data.meta.last_page}
             </span>
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={page >= data.meta.last_page}
-              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               Sau →
             </button>

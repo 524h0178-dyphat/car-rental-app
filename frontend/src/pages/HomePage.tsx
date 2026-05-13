@@ -171,26 +171,26 @@ function FeaturedCarsSection() {
 // ─── Section: Testimonials ──────────────────────────────────────────────
 function TestimonialsSection() {
   return (
-    <section className="py-20 bg-cyan-50" aria-label="Đánh giá khách hàng">
+    <section className="py-20 bg-cyan-50 dark:bg-slate-900/50" aria-label="Đánh giá khách hàng">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Khách hàng nói gì?</h2>
-          <p className="mt-3 text-slate-500">Hàng nghìn khách hàng hài lòng với dịch vụ của chúng tôi</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Khách hàng nói gì?</h2>
+          <p className="mt-3 text-slate-500 dark:text-slate-400">Hàng nghìn khách hàng hài lòng với dịch vụ của chúng tôi</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map(({ name, rating, text }) => (
-            <div key={name} className="bg-white rounded-xl p-6 border border-cyan-100 shadow-card">
+            <div key={name} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-cyan-100 dark:border-slate-700 shadow-card">
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: rating }).map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
                 ))}
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">"{text}"</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">"{text}"</p>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-brand-50 flex items-center justify-center text-brand-700 font-semibold text-sm">
+                <div className="w-9 h-9 rounded-full bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-brand-700 dark:text-brand-400 font-semibold text-sm">
                   {name[0]}
                 </div>
-                <p className="font-medium text-slate-800 text-sm">{name}</p>
+                <p className="font-medium text-slate-800 dark:text-slate-200 text-sm">{name}</p>
               </div>
             </div>
           ))}

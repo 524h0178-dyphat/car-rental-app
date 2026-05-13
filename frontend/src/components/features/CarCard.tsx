@@ -40,7 +40,7 @@ function CarCard({ car }: CarCardProps) {
           </span>
         )}
         {/* Brand badge */}
-        <span className="badge absolute top-3 right-3 bg-white/90 text-slate-700 font-semibold">
+        <span className="badge absolute top-3 right-3 bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-semibold">
           {car.brand}
         </span>
       </div>
@@ -56,7 +56,7 @@ function CarCard({ car }: CarCardProps) {
         )}
 
         {/* Title */}
-        <h3 className="font-semibold text-slate-900 text-base mb-3 line-clamp-2 group-hover:text-brand-500 transition-colors">
+        <h3 className="font-semibold text-slate-900 dark:text-white text-base mb-3 line-clamp-2 group-hover:text-brand-500 transition-colors">
           {car.name}
         </h3>
 
@@ -74,7 +74,7 @@ function CarCard({ car }: CarCardProps) {
             <Fuel className="w-3.5 h-3.5" />
             {car.fuel}
           </span>
-          <span className="ml-auto font-medium text-slate-700">{car.year}</span>
+          <span className="ml-auto font-medium text-slate-700 dark:text-slate-300">{car.year}</span>
         </div>
 
         {/* Rating placeholder + Price */}
