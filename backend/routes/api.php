@@ -99,6 +99,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/car-submissions/my',      [CarSubmissionController::class, 'mySubmissions']);
         Route::get('/car-submissions/{id}',    [CarSubmissionController::class, 'show'])
             ->middleware('auth:sanctum');
+        Route::put('/cars/{id}',               [CarController::class, 'update']);
     });
 
     // ── Wallet ────────────────────────────────────────────────────────────

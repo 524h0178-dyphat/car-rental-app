@@ -30,6 +30,8 @@ class CarResource extends JsonResource
             'location'     => new LocationResource($this->whenLoaded('location')),
             'images'       => CarImageResource::collection($this->whenLoaded('images')),
             'features'     => FeatureResource::collection($this->whenLoaded('features')),
+            'reviews_count' => $this->reviews_count ?? 0,
+            'reviews_avg_rating' => (float) ($this->reviews_avg_rating ?? 0.0),
             'primary_image'=> $this->whenLoaded('images', fn() =>
                 $this->images->where('is_primary', true)->first()?->image_url
                 ?? $this->images->first()?->image_url

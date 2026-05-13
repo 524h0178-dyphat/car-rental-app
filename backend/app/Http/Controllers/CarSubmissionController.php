@@ -49,6 +49,10 @@ class CarSubmissionController extends Controller
                 'license_plate'=> $s->license_plate,
                 'status'       => $s->status,
                 'status_label' => $s->statusLabel(),
+                'car_id'       => $s->car_id,
+                'slug'         => $s->car?->slug,
+                'price'        => $s->car ? $s->car->price_per_day : $s->expected_price_per_day,
+                'car_status'   => $s->car?->status,
                 'created_at'   => $s->created_at->toDateTimeString(),
             ]);
 
@@ -142,6 +146,9 @@ class CarSubmissionController extends Controller
                 ]);
 
                 $this->attachSubmissionImages($car, $submission->images ?? []);
+                
+                $submission->car_id = $car->id;
+                $submission->save();
             }
         }
 

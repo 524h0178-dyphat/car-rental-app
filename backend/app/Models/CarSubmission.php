@@ -23,6 +23,11 @@ class CarSubmission extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function car(): BelongsTo
+    {
+        return $this->belongsTo(Car::class);
+    }
+
     public function statusLabel(): string
     {
         return match ($this->status) {

@@ -192,9 +192,7 @@ function StepOwner({ form, setForm, onNext, onBack }: any) {
 
 // ── Step 2: Car info ──────────────────────────────────────────────────────────
 const PROVINCES = [
-  'Hà Nội', 'TP. Hồ Chí Minh', 'Đà Nẵng', 'Hội An', 'Huế',
-  'Nha Trang', 'Đà Lạt', 'Cần Thơ', 'Hải Phòng', 'Vũng Tàu',
-  'Quy Nhơn', 'Phú Quốc', 'Bình Dương', 'Đồng Nai',
+  'Đà Lạt', 'Đà Nẵng', 'Hà Nội', 'Hồ Chí Minh', 'Nha Trang'
 ];
 
 function StepCar({ form, setForm, onNext, onBack }: any) {

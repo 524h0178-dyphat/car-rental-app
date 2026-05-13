@@ -29,6 +29,12 @@ class CarController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Car::with(['location', 'images', 'features'])
+            ->withCount(['reviews' => function ($q) {
+                $q->where('status', 'visible');
+            }])
+            ->withAvg(['reviews' => function ($q) {
+                $q->where('status', 'visible');
+            }], 'rating')
             ->where('status', 'available')
             ->whereDoesntHave('bookings', function ($q) {
                 $q->where('status', 'active');
@@ -117,6 +123,12 @@ class CarController extends Controller
     public function featured(): AnonymousResourceCollection
     {
         $cars = Car::with(['location', 'images', 'features'])
+            ->withCount(['reviews' => function ($q) {
+                $q->where('status', 'visible');
+            }])
+            ->withAvg(['reviews' => function ($q) {
+                $q->where('status', 'visible');
+            }], 'rating')
             ->where('status', 'available')
             ->whereDoesntHave('bookings', function ($q) {
                 $q->where('status', 'active');
@@ -165,5 +177,43 @@ class CarController extends Controller
             ]);
 
         return response()->json(['data' => $ranges]);
+    }
+
+    /**
+     * PUT /api/v1/cars/{id}
+     * Update car price and status (Owner only).
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $car = Car::findOrFail($id);
+
+        // Verify ownership via CarSubmission
+        $submission = \App\Models\CarSubmission::where('car_id', $car->id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (!$submission) {
+            return response()->json(['message' => 'Bạn không có quyền chỉnh sửa xe này.'], 403);
+        }
+
+        $request->validate([
+            'price_per_day' => 'sometimes|numeric|min:100000',
+            'status' => 'sometimes|string|in:available,maintenance',
+        ]);
+
+        if ($request->has('price_per_day')) {
+            $car->price_per_day = $request->price_per_day;
+        }
+
+        if ($request->has('status')) {
+            $car->status = $request->status;
+        }
+
+        $car->save();
+
+        return response()->json([
+            'message' => 'Cập nhật xe thành công.',
+            'data' => $car
+        ]);
     }
 }

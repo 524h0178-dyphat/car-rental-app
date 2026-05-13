@@ -124,6 +124,13 @@ class ReviewController extends Controller
                 Review::where('car_id', $car->id)->where('status', 'visible')->avg('rating') ?? 0,
                 1
             ),
+            'distribution' => [
+                5 => Review::where('car_id', $car->id)->where('status', 'visible')->where('rating', 5)->count(),
+                4 => Review::where('car_id', $car->id)->where('status', 'visible')->where('rating', 4)->count(),
+                3 => Review::where('car_id', $car->id)->where('status', 'visible')->where('rating', 3)->count(),
+                2 => Review::where('car_id', $car->id)->where('status', 'visible')->where('rating', 2)->count(),
+                1 => Review::where('car_id', $car->id)->where('status', 'visible')->where('rating', 1)->count(),
+            ],
         ]);
     }
 }

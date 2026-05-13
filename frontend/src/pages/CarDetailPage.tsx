@@ -95,15 +95,15 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
   );
 
   return (
-    <div className="card p-6 sticky top-24" aria-label="Form đặt xe">
-      <h2 className="font-semibold text-slate-900 text-lg mb-1">Đặt xe</h2>
+    <div className="card dark:bg-slate-800 p-6 sticky top-24" aria-label="Form đặt xe">
+      <h2 className="font-semibold text-slate-900 dark:text-white text-lg mb-1">Đặt xe</h2>
       <p className="text-brand-500 font-bold text-2xl mb-5">
-        {formatPrice(pricePerDay)}<span className="text-sm font-normal text-slate-400">/ngày</span>
+        {formatPrice(pricePerDay)}<span className="text-sm font-normal text-slate-400 dark:text-slate-500">/ngày</span>
       </p>
 
       <div className="space-y-3 mb-5">
         <div>
-          <label htmlFor="detail-start" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="detail-start" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Ngày nhận xe
           </label>
           <input
@@ -116,7 +116,7 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
           />
         </div>
         <div>
-          <label htmlFor="detail-end" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="detail-end" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Ngày trả xe
           </label>
           <input
@@ -131,22 +131,22 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
       </div>
 
       {unavailable.length > 0 && (
-        <div className="mb-5 rounded-xl border border-cyan-100 bg-cyan-50/60 p-4">
-          <p className="text-sm font-semibold text-slate-800 mb-2 flex items-center gap-2">
+        <div className="mb-5 rounded-xl border border-cyan-100 dark:border-cyan-900/30 bg-cyan-50/60 dark:bg-cyan-900/20 p-4">
+          <p className="text-sm font-semibold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
             <Calendar className="w-4 h-4 text-brand-500" />
             Lịch đã có người đặt
           </p>
           <div className="space-y-1.5">
             {unavailable.slice(0, 4).map((range) => (
-              <div key={range.id} className="flex items-center justify-between text-xs text-slate-600">
+              <div key={range.id} className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
                 <span>{range.start_date}</span>
-                <span className="text-slate-300">đến</span>
+                <span className="text-slate-300 dark:text-slate-600">đến</span>
                 <span>{range.end_date}</span>
               </div>
             ))}
           </div>
           {unavailable.length > 4 && (
-            <p className="text-xs text-slate-400 mt-2">+{unavailable.length - 4} khoảng ngày khác</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">+{unavailable.length - 4} khoảng ngày khác</p>
           )}
         </div>
       )}
@@ -258,10 +258,10 @@ export default function CarDetailPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-slate-400">
-          <Link to="/" className="hover:text-slate-600 transition-colors">Trang chủ</Link>
+        <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500">
+          <Link to="/" className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Trang chủ</Link>
           <span>/</span>
-          <Link to="/tim-xe" className="hover:text-slate-600 transition-colors">Tìm xe</Link>
+          <Link to="/tim-xe" className="hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Tìm xe</Link>
           <span>/</span>
           <span className="text-slate-700 dark:text-slate-200 font-medium truncate">{car.name}</span>
         </nav>
@@ -273,12 +273,12 @@ export default function CarDetailPage() {
             <div>
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <span className="badge bg-brand-50 text-brand-600 mb-2">{car.brand}</span>
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900">{car.name}</h1>
+                  <span className="badge bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 mb-2">{car.brand}</span>
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{car.name}</h1>
                 </div>
               </div>
               {car.location && (
-                <p className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
+                <p className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm mt-1">
                   <MapPin className="w-4 h-4 text-brand-400" />
                   {formatLocation(car.location)}
                 </p>
@@ -289,16 +289,16 @@ export default function CarDetailPage() {
             <ImageCarousel images={car.images ?? []} />
 
             {/* Specs */}
-            <div className="card p-6">
-              <h2 className="font-semibold text-slate-900 mb-4">Thông số kỹ thuật</h2>
+            <div className="card dark:bg-slate-800 p-6">
+              <h2 className="font-semibold text-slate-900 dark:text-white mb-4">Thông số kỹ thuật</h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {specs.map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex flex-col items-center gap-2 p-3 bg-slate-50 rounded-xl text-center">
-                    <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center">
+                  <div key={label} className="flex flex-col items-center gap-2 p-3 bg-slate-50 dark:bg-slate-700 rounded-xl text-center">
+                    <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center">
                       <Icon className="w-5 h-5 text-brand-500" />
                     </div>
-                    <p className="text-xs text-slate-400">{label}</p>
-                    <p className="text-sm font-semibold text-slate-800">{value}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">{label}</p>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{value}</p>
                   </div>
                 ))}
               </div>
@@ -306,13 +306,13 @@ export default function CarDetailPage() {
 
             {/* Features */}
             {car.features && car.features.length > 0 && (
-              <div className="card p-6">
-                <h2 className="font-semibold text-slate-900 mb-4">Tính năng nổi bật</h2>
+              <div className="card dark:bg-slate-800 p-6">
+                <h2 className="font-semibold text-slate-900 dark:text-white mb-4">Tính năng nổi bật</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {car.features.map((feature) => (
-                    <div key={feature.id} className="flex items-center gap-2 text-sm text-slate-700">
-                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3.5 h-3.5 text-green-600" />
+                    <div key={feature.id} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                      <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                       </div>
                       {feature.name}
                     </div>
@@ -323,21 +323,21 @@ export default function CarDetailPage() {
 
             {/* Description */}
             {car.description && (
-              <div className="card p-6">
-                <h2 className="font-semibold text-slate-900 mb-3">Mô tả xe</h2>
-                <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+              <div className="card dark:bg-slate-800 p-6">
+                <h2 className="font-semibold text-slate-900 dark:text-white mb-3">Mô tả xe</h2>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-line">
                   {car.description}
                 </p>
               </div>
             )}
 
             {/* Rental Policy */}
-            <div className="card p-6">
-              <h2 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <div className="card dark:bg-slate-800 p-6">
+              <h2 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <Shield className="w-5 h-5 text-brand-500" />
                 Chính sách thuê xe
               </h2>
-              <ul className="space-y-2 text-sm text-slate-600">
+              <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                 {[
                   'Cần cung cấp CCCD/Hộ chiếu hợp lệ',
                   'Bằng lái xe phù hợp với loại xe',
@@ -354,7 +354,7 @@ export default function CarDetailPage() {
             </div>
 
             {/* Reviews */}
-            <ReviewsSection carName={car.name} />
+            <ReviewsSection carName={car.name} carId={car.id} />
 
           </div>
 

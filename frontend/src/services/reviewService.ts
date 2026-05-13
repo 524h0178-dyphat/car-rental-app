@@ -15,6 +15,7 @@ export interface CarReviewsResponse {
   data: Review[];
   meta: { total: number; current_page: number; last_page: number };
   average_rating: number;
+  distribution: Record<number, number>;
 }
 
 export const reviewService = {

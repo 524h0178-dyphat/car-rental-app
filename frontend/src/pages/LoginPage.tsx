@@ -42,7 +42,7 @@ export default function LoginPage() {
               Hàng trăm mẫu xe chờ bạn khám phá. Đặt xe nhanh, an toàn, tiện lợi.
             </p>
             <div className="flex gap-8 mt-10">
-              {[['500+', 'Mẫu xe'], ['50K+', 'Lượt thuê'], ['98%', 'Hài lòng']].map(([n, l]) => (
+              {[['500+', 'Mẫu xe'], ['10K+', 'Lượt thuê'], ['98%', 'Hài lòng']].map(([n, l]) => (
                 <div key={l}>
                   <p className="text-3xl font-bold">{n}</p>
                   <p className="text-white/60 text-sm">{l}</p>

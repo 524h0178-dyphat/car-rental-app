@@ -159,9 +159,17 @@ function OwnerBookingCard({ booking }: { booking: Booking }) {
 
             <div className="flex items-center justify-between flex-wrap gap-2">
               <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                booking.payout_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:text-slate-400'
+                booking.payout_status === 'paid' 
+                  ? 'bg-green-100 text-green-700' 
+                  : booking.payment_status === 'paid'
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'bg-slate-100 text-slate-500 dark:text-slate-400'
               }`}>
-                {booking.payout_status === 'paid' ? '✓ Đã nhận tiền' : '⏳ Chờ thanh toán'}
+                {booking.payout_status === 'paid' 
+                  ? '✓ Đã nhận tiền' 
+                  : booking.payment_status === 'paid'
+                    ? '⏳ Tiền tạm giữ (Chờ khách nhận xe)'
+                    : '⏳ Chờ khách thanh toán'}
               </span>
 
               <div className="flex items-center gap-2">

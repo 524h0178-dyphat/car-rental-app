@@ -372,6 +372,14 @@ function SubmissionsSummaryTab() {
           </div>
         </div>
       ))}
+
+      <Link
+        to="/don-ky-gui"
+        className="flex items-center justify-center gap-1.5 text-sm text-brand-500 hover:text-brand-600 font-medium py-2 mt-2 transition-colors"
+      >
+        Xem chi tiết và quản lý xe
+        <ChevronRight className="w-4 h-4" />
+      </Link>
     </div>
   );
 }

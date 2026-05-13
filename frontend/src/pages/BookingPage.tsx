@@ -32,17 +32,17 @@ function StepIndicator({ current }: { current: number }) {
               <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                 done   ? 'bg-green-500 text-white' :
                 active ? 'bg-brand-500 text-white shadow-orange' :
-                         'bg-slate-100 text-slate-400'
+                         'bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500'
               }`}>
                 {done ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
               </div>
               <span className={`text-xs font-medium whitespace-nowrap ${
-                active ? 'text-brand-600' : done ? 'text-green-600' : 'text-slate-400'
+                active ? 'text-brand-600' : done ? 'text-green-600' : 'text-slate-400 dark:text-slate-500'
               }`}>{step.label}</span>
             </div>
             {i < STEPS.length - 1 && (
               <div className={`w-16 sm:w-24 h-0.5 mx-2 mb-5 transition-colors duration-300 ${
-                done ? 'bg-green-400' : 'bg-slate-200'
+                done ? 'bg-green-400' : 'bg-slate-200 dark:bg-slate-700'
               }`} />
             )}
           </div>
@@ -56,21 +56,21 @@ function StepIndicator({ current }: { current: number }) {
 function PriceSummary({ pricePerDay, totalDays }: { pricePerDay: number; totalDays: number }) {
   const total = pricePerDay * totalDays;
   return (
-    <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5 space-y-2 text-sm">
-      <h3 className="font-semibold text-slate-900 mb-3">Chi phí thuê xe</h3>
-      <div className="flex justify-between text-slate-600">
+    <div className="bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/30 rounded-2xl p-5 space-y-2 text-sm">
+      <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Chi phí thuê xe</h3>
+      <div className="flex justify-between text-slate-600 dark:text-slate-400">
         <span>{formatPrice(pricePerDay)} × {totalDays} ngày</span>
         <span>{formatPrice(total)}</span>
       </div>
-      <div className="flex justify-between text-slate-600">
+      <div className="flex justify-between text-slate-600 dark:text-slate-400">
         <span>Phí dịch vụ</span>
         <span className="text-green-600 font-medium">Miễn phí</span>
       </div>
-      <div className="flex justify-between text-slate-600">
+      <div className="flex justify-between text-slate-600 dark:text-slate-400">
         <span>Bảo hiểm</span>
         <span className="text-green-600 font-medium">Đã bao gồm</span>
       </div>
-      <div className="border-t border-brand-200 pt-2 flex justify-between font-bold text-slate-900 text-base">
+      <div className="border-t border-brand-200 dark:border-brand-900/50 pt-2 flex justify-between font-bold text-slate-900 dark:text-white text-base">
         <span>Tổng cộng</span>
         <span className="text-brand-500">{formatPrice(total)}</span>
       </div>
@@ -100,7 +100,7 @@ function Step1({
   return (
     <div className="space-y-6">
       {/* Car summary card */}
-      <div className="flex gap-4 p-4 bg-white border border-slate-200 rounded-2xl items-center">
+      <div className="flex gap-4 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl items-center">
         {primaryImage && (
           <img
             src={primaryImage}
@@ -109,10 +109,10 @@ function Step1({
           />
         )}
         <div className="flex-1 min-w-0">
-          <span className="badge bg-brand-50 text-brand-600 text-xs mb-1">{car.brand}</span>
-          <h3 className="font-semibold text-slate-900 truncate">{car.name}</h3>
+          <span className="badge bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-xs mb-1">{car.brand}</span>
+          <h3 className="font-semibold text-slate-900 dark:text-white truncate">{car.name}</h3>
           {car.location && (
-            <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
               <MapPin className="w-3 h-3" />
               {formatLocation(car.location)}
             </p>
@@ -120,14 +120,14 @@ function Step1({
         </div>
         <div className="text-right flex-shrink-0">
           <p className="text-brand-500 font-bold">{formatPrice(car.price_per_day)}</p>
-          <p className="text-xs text-slate-400">/ngày</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">/ngày</p>
         </div>
       </div>
 
       {/* Date pickers */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="book-start" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="book-start" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <Calendar className="inline w-4 h-4 mr-1 text-brand-500" />Ngày nhận xe
           </label>
           <input
@@ -140,7 +140,7 @@ function Step1({
           />
         </div>
         <div>
-          <label htmlFor="book-end" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="book-end" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <Calendar className="inline w-4 h-4 mr-1 text-brand-500" />Ngày trả xe
           </label>
           <input
@@ -157,9 +157,9 @@ function Step1({
       <PriceSummary pricePerDay={car.price_per_day} totalDays={totalDays} />
 
       {/* Rental policy */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-400">
         <p className="font-medium mb-1">📋 Lưu ý quan trọng</p>
-        <ul className="list-disc list-inside space-y-0.5 text-amber-700">
+        <ul className="list-disc list-inside space-y-0.5 text-amber-700 dark:text-amber-300">
           <li>Cần chuẩn bị CCCD và bằng lái xe hợp lệ</li>
           <li>Chúng tôi sẽ xác nhận đặt xe trong vòng 30 phút</li>
           <li>Có thể hủy miễn phí trước 24 giờ nhận xe</li>
@@ -197,7 +197,7 @@ function Step2({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Name */}
         <div className="sm:col-span-2">
-          <label htmlFor="r-name" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <User className="inline w-4 h-4 mr-1 text-brand-500" />Họ và tên người thuê *
           </label>
           <input
@@ -213,7 +213,7 @@ function Step2({
 
         {/* Phone */}
         <div>
-          <label htmlFor="r-phone" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <Phone className="inline w-4 h-4 mr-1 text-brand-500" />Số điện thoại *
           </label>
           <input
@@ -229,7 +229,7 @@ function Step2({
 
         {/* CCCD */}
         <div>
-          <label htmlFor="r-cccd" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-cccd" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <BadgeCheck className="inline w-4 h-4 mr-1 text-brand-500" />Số CCCD/CMND *
           </label>
           <input
@@ -245,9 +245,9 @@ function Step2({
 
         {/* Driver license */}
         <div className="sm:col-span-2">
-          <label htmlFor="r-license" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-license" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Số bằng lái xe
-            <span className="text-slate-400 font-normal ml-1">(tùy chọn)</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">(tùy chọn)</span>
           </label>
           <input
             id="r-license"
@@ -261,9 +261,9 @@ function Step2({
 
         {/* Pickup address */}
         <div className="sm:col-span-2">
-          <label htmlFor="r-pickup" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-pickup" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             <MapPin className="inline w-4 h-4 mr-1 text-brand-500" />Địa điểm nhận xe
-            <span className="text-slate-400 font-normal ml-1">(để trống = nhận tại văn phòng)</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">(để trống = nhận tại văn phòng)</span>
           </label>
           <input
             id="r-pickup"
@@ -277,9 +277,9 @@ function Step2({
 
         {/* Note */}
         <div className="sm:col-span-2">
-          <label htmlFor="r-note" className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label htmlFor="r-note" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
             Ghi chú
-            <span className="text-slate-400 font-normal ml-1">(tùy chọn)</span>
+            <span className="text-slate-400 dark:text-slate-500 font-normal ml-1">(tùy chọn)</span>
           </label>
           <textarea
             id="r-note"
@@ -338,7 +338,7 @@ function Step3({
     <div className="space-y-6">
       {/* Payment method selection */}
       <div>
-        <h3 className="text-sm font-semibold text-slate-700 mb-3">Phương thức thanh toán</h3>
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Phương thức thanh toán</h3>
         <div className="space-y-3">
           {PAYMENT_OPTIONS.map((opt) => {
             const Icon = opt.icon;
@@ -350,21 +350,21 @@ function Step3({
                 onClick={() => setForm((p) => ({ ...p, payment_method: opt.value }))}
                 className={`w-full flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                   selected
-                    ? 'border-brand-500 bg-brand-50'
-                    : 'border-slate-200 bg-white hover:border-brand-200'
+                    ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-200 dark:hover:border-brand-700'
                 }`}
                 aria-pressed={selected}
               >
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                  selected ? 'bg-brand-500 text-white' : 'bg-slate-100 text-slate-500'
+                  selected ? 'bg-brand-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                 }`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className={`font-medium text-sm ${selected ? 'text-brand-700' : 'text-slate-800'}`}>
+                  <p className={`font-medium text-sm ${selected ? 'text-brand-700 dark:text-brand-400' : 'text-slate-800 dark:text-slate-200'}`}>
                     {opt.label}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{opt.desc}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{opt.desc}</p>
                 </div>
                 {selected && (
                   <CheckCircle2 className="w-5 h-5 text-brand-500 ml-auto flex-shrink-0 mt-0.5" />
@@ -376,8 +376,8 @@ function Step3({
       </div>
 
       {/* Final summary */}
-      <div className="card p-5 space-y-3 text-sm">
-        <h3 className="font-semibold text-slate-900 mb-3">Xác nhận thông tin</h3>
+      <div className="card dark:bg-slate-800 p-5 space-y-3 text-sm">
+        <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Xác nhận thông tin</h3>
         {[
           ['Xe', car.name],
           ['Ngày nhận', new Date(form.start_date).toLocaleDateString('vi-VN')],
@@ -389,8 +389,8 @@ function Step3({
           ...(form.pickup_address ? [['Nhận xe tại', form.pickup_address]] : []),
         ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-4">
-            <span className="text-slate-500 flex-shrink-0">{k}</span>
-            <span className="text-slate-800 font-medium text-right">{v}</span>
+            <span className="text-slate-500 dark:text-slate-400 flex-shrink-0">{k}</span>
+            <span className="text-slate-800 dark:text-slate-200 font-medium text-right">{v}</span>
           </div>
         ))}
       </div>
@@ -399,9 +399,9 @@ function Step3({
 
       {/* Error */}
       {error && (
-        <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl p-4">
+        <div className="flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-xl p-4">
           <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
 
@@ -504,26 +504,26 @@ export default function BookingPage() {
   // ── Success screen ─────────────────────────────────────────────────────
   if (step === 3 && createdBookingId) {
     return (
-      <div className="min-h-screen pt-20 bg-slate-50 flex items-center justify-center px-4">
+      <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900 flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-500" />
+          <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-green-500 dark:text-green-400" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Đặt xe thành công!</h1>
-          <p className="text-slate-500 mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Đặt xe thành công!</h1>
+          <p className="text-slate-500 dark:text-slate-400 mb-8">
             Mã đặt xe: <span className="font-mono font-bold text-brand-600">#{String(createdBookingId).padStart(6, '0')}</span>
             <br />
             Chúng tôi sẽ liên hệ xác nhận trong vòng <strong>30 phút</strong>.
           </p>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 text-sm text-left mb-6 space-y-3">
-            <p className="font-semibold text-slate-900">Bước tiếp theo</p>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 text-sm text-left mb-6 space-y-3">
+            <p className="font-semibold text-slate-900 dark:text-white">Bước tiếp theo</p>
             {[
               '1. Chờ xác nhận qua điện thoại hoặc email',
               '2. Chuẩn bị CCCD, bằng lái xe gốc',
               '3. Thanh toán theo phương thức đã chọn',
               '4. Nhận xe đúng giờ đã thỏa thuận',
             ].map((s) => (
-              <p key={s} className="text-slate-600">{s}</p>
+              <p key={s} className="text-slate-600 dark:text-slate-400">{s}</p>
             ))}
           </div>
           <div className="flex flex-col gap-3">
@@ -540,22 +540,22 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
         {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center gap-2 text-sm text-slate-400">
-          <Link to="/" className="hover:text-slate-600">Trang chủ</Link>
+        <nav className="mb-6 flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500">
+          <Link to="/" className="hover:text-slate-600 dark:hover:text-slate-300">Trang chủ</Link>
           <span>/</span>
-          <Link to={`/xe/${slug}`} className="hover:text-slate-600 truncate max-w-[150px]">{car.name}</Link>
+          <Link to={`/xe/${slug}`} className="hover:text-slate-600 dark:hover:text-slate-300 truncate max-w-[150px]">{car.name}</Link>
           <span>/</span>
-          <span className="text-slate-700">Đặt xe</span>
+          <span className="text-slate-700 dark:text-slate-300">Đặt xe</span>
         </nav>
 
-        <h1 className="text-2xl font-bold text-slate-900 mb-8">Đặt xe</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Đặt xe</h1>
 
         <StepIndicator current={step} />
 
-        <div className="card p-6 sm:p-8">
+        <div className="card dark:bg-slate-800 p-6 sm:p-8">
           {step === 0 && (
             <Step1 car={car} form={formWithCar} setForm={setForm} onNext={() => setStep(1)} />
           )}

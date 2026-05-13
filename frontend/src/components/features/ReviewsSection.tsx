@@ -1,32 +1,6 @@
-import { Star } from 'lucide-react';
-
-// ── Static review data (UI demo — API sẽ thêm ở phase sau) ──────────────────
-const DEMO_REVIEWS = [
-  {
-    id: 1,
-    name: 'Nguyễn Minh Tú',
-    avatar: null,
-    rating: 5,
-    date: '28/04/2026',
-    text: 'Xe rất sạch sẽ, đi êm, đúng như mô tả. Chủ xe nhiệt tình, liên hệ nhanh. Chắc chắn sẽ thuê lại!',
-  },
-  {
-    id: 2,
-    name: 'Trần Thị Lan',
-    avatar: null,
-    rating: 5,
-    date: '22/04/2026',
-    text: 'Dịch vụ tốt, giao xe đúng hẹn. Xe mới, nội thất sang. Phí dịch vụ hợp lý.',
-  },
-  {
-    id: 3,
-    name: 'Phạm Văn Hùng',
-    avatar: null,
-    rating: 4,
-    date: '15/04/2026',
-    text: 'Xe ổn, nhưng giá xăng khá tốn. Tổng trải nghiệm vẫn rất đáng để thử.',
-  },
-];
+import { useState } from 'react';
+import { Star, Loader2, AlertCircle } from 'lucide-react';
+import { useCarReviews } from '@/hooks/useCarDetail';
 
 // ── Star component ────────────────────────────────────────────────────────────
 export function StarRating({
@@ -72,21 +46,20 @@ function ReviewAvatar({ name }: { name: string }) {
 }
 
 // ── Rating summary bar ────────────────────────────────────────────────────────
-function RatingSummary({ reviews }: { reviews: typeof DEMO_REVIEWS }) {
-  const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
-  const dist = [5, 4, 3, 2, 1].map((star) => ({
-    star,
-    count: reviews.filter((r) => r.rating === star).length,
-    pct: (reviews.filter((r) => r.rating === star).length / reviews.length) * 100,
-  }));
+function RatingSummary({ averageRating, distribution, total }: { averageRating: number; distribution: Record<number, number>; total: number }) {
+  const dist = [5, 4, 3, 2, 1].map((star) => {
+    const count = distribution[star] || 0;
+    const pct = total > 0 ? (count / total) * 100 : 0;
+    return { star, count, pct };
+  });
 
   return (
     <div className="flex flex-col sm:flex-row gap-6 p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl mb-6">
       {/* Overall score */}
       <div className="flex flex-col items-center justify-center gap-2 sm:w-32 flex-shrink-0">
-        <span className="text-5xl font-bold text-slate-900 dark:text-white">{avg.toFixed(1)}</span>
-        <StarRating rating={avg} size="md" />
-        <span className="text-xs text-slate-500">{reviews.length} đánh giá</span>
+        <span className="text-5xl font-bold text-slate-900 dark:text-white">{averageRating.toFixed(1)}</span>
+        <StarRating rating={averageRating} size="md" />
+        <span className="text-xs text-slate-500">{total} đánh giá</span>
       </div>
 
       {/* Distribution */}
@@ -112,9 +85,36 @@ function RatingSummary({ reviews }: { reviews: typeof DEMO_REVIEWS }) {
 // ── Main Reviews Section ──────────────────────────────────────────────────────
 interface Props {
   carName?: string;
+  carId: number;
 }
 
-export default function ReviewsSection({ carName }: Props) {
+export default function ReviewsSection({ carName, carId }: Props) {
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isError } = useCarReviews(carId, page);
+
+  if (isLoading) {
+    return (
+      <div className="mt-10 flex items-center justify-center p-10">
+        <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />
+        <span className="ml-2 text-slate-500 text-sm">Đang tải đánh giá...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="mt-10 flex items-center justify-center p-10 text-red-500 text-sm">
+        <AlertCircle className="w-5 h-5 mr-2" />
+        Lỗi khi tải đánh giá.
+      </div>
+    );
+  }
+
+  const reviews = data?.data || [];
+  const total = data?.meta.total || 0;
+  const averageRating = data?.average_rating || 0;
+  const distribution = data?.distribution || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
   return (
     <section aria-labelledby="reviews-heading" className="mt-10">
       <h2 id="reviews-heading" className="text-xl font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
@@ -122,34 +122,65 @@ export default function ReviewsSection({ carName }: Props) {
         Đánh giá từ khách thuê
       </h2>
 
-      <RatingSummary reviews={DEMO_REVIEWS} />
+      <RatingSummary averageRating={averageRating} distribution={distribution} total={total} />
 
-      <div className="space-y-4">
-        {DEMO_REVIEWS.map((review) => (
-          <article
-            key={review.id}
-            className="card p-5 flex gap-4"
-            aria-label={`Đánh giá của ${review.name}`}
-          >
-            <ReviewAvatar name={review.name} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2 mb-1.5">
-                <div>
-                  <p className="font-semibold text-sm text-slate-900 dark:text-white">{review.name}</p>
-                  <p className="text-xs text-slate-400">{review.date}</p>
+      {reviews.length === 0 ? (
+        <div className="text-center py-10 text-slate-500 text-sm">
+          Chưa có đánh giá nào cho xe này.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <article
+              key={review.id}
+              className="card p-5 flex gap-4"
+              aria-label={`Đánh giá của ${review.user?.name ?? 'Khách'}`}
+            >
+              <ReviewAvatar name={review.user?.name ?? 'Khách'} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <div>
+                    <p className="font-semibold text-sm text-slate-900 dark:text-white">{review.user?.name ?? 'Khách'}</p>
+                    <p className="text-xs text-slate-400">{new Date(review.created_at).toLocaleDateString('vi-VN')}</p>
+                  </div>
+                  <StarRating rating={review.rating} />
                 </div>
-                <StarRating rating={review.rating} />
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{review.comment || 'Không có nhận xét.'}</p>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{review.text}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      )}
 
-      <p className="text-xs text-center text-slate-400 mt-4">
-        Hiển thị {DEMO_REVIEWS.length} trong tổng số {DEMO_REVIEWS.length} đánh giá về{' '}
-        <span className="font-medium">{carName}</span>
-      </p>
+      {total > 0 && (
+        <p className="text-xs text-center text-slate-400 mt-4">
+          Hiển thị {reviews.length} trong tổng số {total} đánh giá về{' '}
+          <span className="font-medium">{carName}</span>
+        </p>
+      )}
+
+      {/* Pagination */}
+      {data?.meta && data.meta.last_page > 1 && (
+        <div className="flex justify-center gap-2 mt-6">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page <= 1}
+            className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            ← Trước
+          </button>
+          <span className="px-4 py-2 text-sm text-slate-500 dark:text-slate-400">
+            Trang {page} / {data.meta.last_page}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page >= data.meta.last_page}
+            className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            Sau →
+          </button>
+        </div>
+      )}
     </section>
   );
 }

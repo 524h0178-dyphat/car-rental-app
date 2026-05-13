@@ -118,7 +118,7 @@ export default function ReviewCreatePage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
+    <div className="min-h-screen pt-20 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-xl mx-auto px-4 py-10">
         {/* Back button */}
         <Link
@@ -128,19 +128,19 @@ export default function ReviewCreatePage() {
           <ArrowLeft className="w-4 h-4" /> Quay lại đơn thuê xe
         </Link>
 
-        <div className="card p-8">
+        <div className="card p-8 dark:bg-slate-800">
           {/* Car info */}
-          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
-            <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center">
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100 dark:border-slate-700">
+            <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-900/20 flex items-center justify-center">
               <Car className="w-6 h-6 text-brand-500" />
             </div>
             <div>
               <p className="text-xs text-slate-400 font-mono">Đơn #{String(booking.id).padStart(6, '0')}</p>
-              <h3 className="font-semibold text-slate-900">{booking.car?.name ?? 'Xe đã thuê'}</h3>
+              <h3 className="font-semibold text-slate-900 dark:text-white">{booking.car?.name ?? 'Xe đã thuê'}</h3>
             </div>
           </div>
 
-          <h1 className="text-xl font-bold text-slate-900 mb-6">Viết đánh giá của bạn</h1>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Viết đánh giá của bạn</h1>
 
           <form
             onSubmit={(e) => {
@@ -152,7 +152,7 @@ export default function ReviewCreatePage() {
           >
             {/* Rating */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-3">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                 Đánh giá tổng quan <span className="text-red-500">*</span>
               </label>
               <StarPicker value={rating} onChange={setRating} />
@@ -166,7 +166,7 @@ export default function ReviewCreatePage() {
 
             {/* Comment */}
             <div>
-              <label htmlFor="review-comment" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="review-comment" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Nhận xét chi tiết <span className="text-slate-400 font-normal">(tùy chọn)</span>
               </label>
               <textarea

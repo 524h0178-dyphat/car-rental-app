@@ -36,6 +36,8 @@ export interface Car {
   images?: CarImage[];
   features?: Feature[];
   created_at?: string;
+  reviews_count?: number;
+  reviews_avg_rating?: number;
 }
 
 export interface PaginatedResponse<T> {

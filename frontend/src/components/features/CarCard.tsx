@@ -77,10 +77,12 @@ function CarCard({ car }: CarCardProps) {
           <span className="ml-auto font-medium text-slate-700 dark:text-slate-300">{car.year}</span>
         </div>
 
-        {/* Rating placeholder + Price */}
+        {/* Rating + Price */}
         <div className="mt-auto flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-700">
-          <StarRating rating={4.5} />
-          <span className="text-xs text-slate-400 ml-1">(12)</span>
+          <div className="flex items-center gap-1">
+            <StarRating rating={car.reviews_avg_rating ?? 0} />
+            <span className="text-xs text-slate-400">({car.reviews_count ?? 0})</span>
+          </div>
           <div className="text-right">
             <p className="text-xs text-slate-400">Chỉ từ</p>
             <p className="font-bold text-brand-500 text-lg leading-tight">
