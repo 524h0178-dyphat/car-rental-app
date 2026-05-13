@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Wallet, ArrowDownLeft, ArrowUpRight, Clock, AlertCircle } from 'lucide-react';
 import { walletService } from '@/services/walletService';
 import { formatPrice } from '@/utils/formatters';
+import { toast } from 'sonner';
 
 export default function WalletPage() {
   const { data, isLoading, isError } = useQuery({
@@ -34,10 +35,16 @@ export default function WalletPage() {
               </h2>
             )}
             <div className="mt-8 flex gap-3">
-              <button className="bg-brand-500 text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-brand-600 transition-colors">
+              <button 
+                onClick={() => toast.info('Tính năng rút tiền đang được phát triển và sẽ sớm ra mắt!')}
+                className="bg-brand-500 text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-brand-600 transition-colors"
+              >
                 Rút tiền
               </button>
-              <button className="bg-cyan-50 text-brand-700 font-medium px-6 py-2.5 rounded-xl hover:bg-cyan-100 transition-colors border border-cyan-100">
+              <button 
+                onClick={() => toast.info('Tính năng liên kết thẻ đang được phát triển và sẽ sớm ra mắt!')}
+                className="bg-cyan-50 text-brand-700 font-medium px-6 py-2.5 rounded-xl hover:bg-cyan-100 transition-colors border border-cyan-100"
+              >
                 Thêm thẻ
               </button>
             </div>

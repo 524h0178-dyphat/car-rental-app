@@ -364,8 +364,10 @@ class BookingController extends Controller
         // Payout logic: transfer money to owner's wallet (minus platform fee)
         if ($booking->payment_status === 'paid' && $booking->payout_status === 'pending') {
             $payoutAmount = $booking->owner_amount ?? ($booking->total_price * 0.9);
-            $platformFeePercent = 10; // Giữ lại để hiển thị trong mô tả
+            $commissionAmount = $booking->commission_amount ?? ($booking->total_price * 0.1);
+            $platformFeePercent = 10;
 
+            // 1. Cộng tiền cho Chủ xe
             $wallet = \App\Models\Wallet::firstOrCreate(
                 ['user_id' => $booking->car->owner_id],
                 ['balance' => 0]
@@ -381,6 +383,26 @@ class BookingController extends Controller
                 'reference_type' => Booking::class,
                 'reference_id'   => $booking->id,
             ]);
+
+            // 2. Cộng tiền cho Admin (Sàn)
+            $admin = \App\Models\User::where('role', 'admin')->first();
+            if ($admin) {
+                $adminWallet = \App\Models\Wallet::firstOrCreate(
+                    ['user_id' => $admin->id],
+                    ['balance' => 0]
+                );
+
+                $adminWallet->increment('balance', $commissionAmount);
+
+                \App\Models\Transaction::create([
+                    'wallet_id'      => $adminWallet->id,
+                    'type'           => 'credit',
+                    'amount'         => $commissionAmount,
+                    'description'    => "Hoa hồng từ chuyến đi #{$booking->id}",
+                    'reference_type' => Booking::class,
+                    'reference_id'   => $booking->id,
+                ]);
+            }
 
             $booking->update(['payout_status' => 'paid']);
         }
