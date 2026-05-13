@@ -35,4 +35,54 @@ export const bookingService = {
     const res = await api.post(`/bookings/${id}/cancel`, { reason });
     return res.data;
   },
+
+  /** POST /bookings/:id/mock-payment */
+  mockPayment: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/mock-payment`);
+    return res.data;
+  },
+
+  // ── Owner Routes ───────────────────────────────────────────────────
+
+  /** GET /bookings/owner */
+  ownerList: async (page = 1): Promise<PaginatedBookings> => {
+    const res = await api.get('/bookings/owner', { params: { page } });
+    return res.data;
+  },
+
+  /** POST /bookings/:id/owner-confirm */
+  ownerConfirm: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/owner-confirm`);
+    return res.data;
+  },
+
+  /** POST /bookings/:id/owner-reject */
+  ownerReject: async (id: number, reason?: string): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/owner-reject`, { reason });
+    return res.data;
+  },
+
+  /** POST /bookings/:id/pickup (Renter) */
+  pickup: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/pickup`);
+    return res.data;
+  },
+
+  /** POST /bookings/:id/reject-pickup (Renter) */
+  rejectPickup: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/reject-pickup`);
+    return res.data;
+  },
+
+  /** POST /bookings/:id/owner-handover */
+  ownerHandover: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/owner-handover`);
+    return res.data;
+  },
+
+  /** POST /bookings/:id/return */
+  ownerReturn: async (id: number): Promise<{ message: string; data: Booking }> => {
+    const res = await api.post(`/bookings/${id}/return`);
+    return res.data;
+  },
 };

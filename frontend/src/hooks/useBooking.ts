@@ -52,3 +52,66 @@ export function useCancelBooking() {
     },
   });
 }
+
+export function useMockPayment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => bookingService.mockPayment(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['booking', id] });
+      toast.success('Thanh toán mô phỏng thành công! 🎉');
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message ?? 'Lỗi khi mô phỏng thanh toán.';
+      toast.error('Thanh toán thất bại', { description: msg });
+    },
+  });
+}
+
+export function useOwnerHandover() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => bookingService.ownerHandover(id),
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries({ queryKey: ['owner-bookings'] });
+      toast.success(res.message || 'Đã bàn giao xe.');
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message ?? 'Lỗi khi bàn giao xe.';
+      toast.error('Bàn giao thất bại', { description: msg });
+    },
+  });
+}
+
+export function usePickupBooking() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => bookingService.pickup(id),
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['booking', id] });
+      toast.success(res.message || 'Xác nhận lấy xe thành công.');
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message ?? 'Lỗi xác nhận lấy xe.';
+      toast.error('Lỗi', { description: msg });
+    },
+  });
+}
+
+export function useRejectPickup() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => bookingService.rejectPickup(id),
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['booking', id] });
+      toast.success(res.message || 'Đã báo cáo không nhận được xe.');
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message ?? 'Lỗi khi báo cáo.';
+      toast.error('Lỗi', { description: msg });
+    },
+  });
+}

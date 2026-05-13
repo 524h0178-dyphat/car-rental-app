@@ -16,6 +16,8 @@ const CarSubmissionPage = lazy(() => import('@/pages/CarSubmissionPage'));
 const LoginPage            = lazy(() => import('@/pages/LoginPage'));
 const RegisterPage         = lazy(() => import('@/pages/RegisterPage'));
 const ForgotPasswordPage   = lazy(() => import('@/pages/ForgotPasswordPage'));
+const WalletPage        = lazy(() => import('@/pages/WalletPage'));
+const OwnerBookingsPage = lazy(() => import('@/pages/OwnerBookingsPage'));
 
 function PageLoader() {
   return (
@@ -50,6 +52,8 @@ export default function AppRouter() {
               <Route path="/dat-xe-cua-toi" element={<MyBookingsPage />} />
               <Route path="/tai-khoan"      element={<ProfilePage />} />
               <Route path="/admin"          element={<AdminPage />} />
+              <Route path="/vi-dien-tu"     element={<WalletPage />} />
+              <Route path="/xe-cho-thue"    element={<OwnerBookingsPage />} />
             </Route>
           </Route>
 

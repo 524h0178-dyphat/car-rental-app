@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
@@ -48,8 +48,21 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/bookings',             [BookingController::class, 'index']);
         Route::post('/bookings',            [BookingController::class, 'store']);
+        Route::get('/bookings/owner',       [BookingController::class, 'ownerIndex']);
         Route::get('/bookings/{id}',        [BookingController::class, 'show']);
         Route::post('/bookings/{id}/cancel',[BookingController::class, 'cancel']);
+        Route::post('/bookings/{id}/mock-payment', [BookingController::class, 'mockPayment']);
+        
+        // P2P Workflow routes
+        Route::post('/bookings/{id}/owner-confirm', [BookingController::class, 'ownerConfirm']);
+        Route::post('/bookings/{id}/owner-reject',  [BookingController::class, 'ownerReject']);
+        Route::post('/bookings/{id}/owner-handover',[BookingController::class, 'ownerHandover']);
+        Route::post('/bookings/{id}/pickup',        [BookingController::class, 'pickup']);
+        Route::post('/bookings/{id}/reject-pickup', [BookingController::class, 'rejectPickup']);
+        Route::post('/bookings/{id}/return',        [BookingController::class, 'ownerReturn']);
+        
+        // Wallet
+        Route::get('/wallet',                       [\App\Http\Controllers\WalletController::class, 'index']);
     });
 
     // ── Admin (auth + admin role) ─────────────────────────────────────────
@@ -62,8 +75,9 @@ Route::prefix('v1')->group(function () {
     });
 
     // ── Car Submissions (ký gửi xe) ───────────────────────────────────────
-    // Public POST — anyone can submit (auth optional via sanctum:api)
-    Route::post('/car-submissions',      [CarSubmissionController::class, 'store']); // removed throttle for testing
-    // Protected GET — view own submissions
-    Route::middleware('auth:sanctum')->get('/car-submissions/my', [CarSubmissionController::class, 'mySubmissions']);
+    // Protected POST — Only logged in users can submit for P2P
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/car-submissions', [CarSubmissionController::class, 'store']);
+        Route::get('/car-submissions/my', [CarSubmissionController::class, 'mySubmissions']);
+    });
 });

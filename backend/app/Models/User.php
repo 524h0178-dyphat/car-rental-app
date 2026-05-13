@@ -31,4 +31,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function ownedCars()
+    {
+        return $this->hasMany(Car::class, 'owner_id');
+    }
 }

@@ -11,13 +11,18 @@ class Car extends Model
     use HasFactory;
 
     protected $fillable = [
-        'location_id', 'name', 'slug', 'brand', 'model', 'year', 'seats',
+        'owner_id', 'location_id', 'name', 'slug', 'brand', 'model', 'year', 'seats',
         'transmission', 'fuel', 'price_per_day', 'status', 'description'
     ];
 
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function images()

@@ -27,6 +27,10 @@ export interface Booking {
   note?: string;
   cancel_reason?: string;
   confirmed_at?: string;
+  handed_over_at?: string;
+  picked_up_at?: string;
+  returned_at?: string;
+  payout_status?: string;
   created_at: string;
   car?: BookingCar;
 }

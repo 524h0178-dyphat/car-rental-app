@@ -16,13 +16,17 @@ class Booking extends Model
         'payment_method', 'payment_status',
         'status', 'note', 'cancel_reason',
         'confirmed_at', 'cancelled_at',
+        'handed_over_at', 'picked_up_at', 'returned_at', 'payout_status',
     ];
 
     protected $casts = [
-        'start_date'   => 'date',
-        'end_date'     => 'date',
-        'confirmed_at' => 'datetime',
-        'cancelled_at' => 'datetime',
+        'start_date'     => 'date',
+        'end_date'       => 'date',
+        'confirmed_at'   => 'datetime',
+        'cancelled_at'   => 'datetime',
+        'handed_over_at' => 'datetime',
+        'picked_up_at'   => 'datetime',
+        'returned_at'    => 'datetime',
     ];
 
     // ── Relationships ──────────────────────────────────────────────────

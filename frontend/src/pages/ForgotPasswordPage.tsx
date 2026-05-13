@@ -213,7 +213,24 @@ export default function ForgotPasswordPage() {
                       type="text"
                       maxLength={6}
                       value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                        setOtp(val);
+                        if (val.length === 6 && !isLoading) {
+                          setError('');
+                          setIsLoading(true);
+                          authService.verifyOtp(email, val)
+                            .then(() => {
+                              setStep(3);
+                            })
+                            .catch((err: any) => {
+                              setError(err.response?.data?.message || 'Mã OTP không hợp lệ.');
+                            })
+                            .finally(() => {
+                              setIsLoading(false);
+                            });
+                        }
+                      }}
                       placeholder="• • • • • •"
                       required
                       className="w-full text-center tracking-[1em] py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-mono"

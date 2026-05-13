@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Car, Phone, User, ChevronDown, LogOut, Settings, Loader2, Moon, Sun } from 'lucide-react';
+import { Menu, X, Car, Phone, User, ChevronDown, LogOut, Settings, Loader2, Moon, Sun, Wallet } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { useLogout } from '@/hooks/useAuth';
@@ -107,6 +107,22 @@ function UserMenu({ isTransparent }: { isTransparent: boolean }) {
             >
               <Car className="w-4 h-4 text-slate-400" />
               Đơn thuê xe
+            </Link>
+            <Link
+              to="/xe-cho-thue"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              <Car className="w-4 h-4 text-brand-400" />
+              Xe cho thuê
+            </Link>
+            <Link
+              to="/vi-dien-tu"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              <Wallet className="w-4 h-4 text-green-500" />
+              Ví điện tử
             </Link>
             {user.role === 'admin' && (
               <Link

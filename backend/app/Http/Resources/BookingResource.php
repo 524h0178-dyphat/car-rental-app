@@ -25,7 +25,11 @@ class BookingResource extends JsonResource
             'pickup_address' => $this->pickup_address,
             'note'           => $this->note,
             'cancel_reason'  => $this->cancel_reason,
+            'payout_status'  => $this->payout_status,
             'confirmed_at'   => $this->confirmed_at?->toDateTimeString(),
+            'handed_over_at' => $this->handed_over_at?->toDateTimeString(),
+            'picked_up_at'   => $this->picked_up_at?->toDateTimeString(),
+            'returned_at'    => $this->returned_at?->toDateTimeString(),
             'created_at'     => $this->created_at->toDateTimeString(),
 
             // Nested relationships

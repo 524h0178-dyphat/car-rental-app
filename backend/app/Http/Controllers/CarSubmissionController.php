@@ -116,6 +116,34 @@ class CarSubmissionController extends Controller
             'reject_reason' => $request->status === 'rejected' ? $request->reject_reason : null,
         ]);
 
+        if ($request->status === 'approved' && $submission->user_id) {
+            $slug = \Illuminate\Support\Str::slug($submission->brand . '-' . $submission->model . '-' . $submission->license_plate);
+            $existing = \App\Models\Car::where('slug', $slug)->first();
+            
+            if (!$existing) {
+                $location = \App\Models\Location::firstOrCreate(
+                    ['province' => $submission->location_province],
+                    ['name' => $submission->location_province]
+                );
+
+                \App\Models\Car::create([
+                    'owner_id'      => $submission->user_id,
+                    'location_id'   => $location->id,
+                    'name'          => $submission->brand . ' ' . $submission->model,
+                    'slug'          => $slug,
+                    'brand'         => $submission->brand,
+                    'model'         => $submission->model,
+                    'year'          => $submission->year,
+                    'seats'         => $submission->seats,
+                    'transmission'  => $submission->transmission,
+                    'fuel'          => $submission->fuel,
+                    'price_per_day' => $submission->expected_price_per_day,
+                    'status'        => 'available',
+                    'description'   => $submission->description,
+                ]);
+            }
+        }
+
         return response()->json([
             'message' => 'Cập nhật trạng thái thành công.',
             'data'    => [

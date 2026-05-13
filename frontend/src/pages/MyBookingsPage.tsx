@@ -4,7 +4,7 @@ import {
   Car, Calendar, MapPin, ChevronRight, Loader2,
   Clock, CheckCircle2, XCircle, Truck, AlertCircle, X,
 } from 'lucide-react';
-import { useMyBookings, useCancelBooking } from '@/hooks/useBooking';
+import { useMyBookings, useCancelBooking, useMockPayment, usePickupBooking, useRejectPickup } from '@/hooks/useBooking';
 import { formatPrice } from '@/utils/formatters';
 import type { Booking, BookingStatus } from '@/types/booking';
 
@@ -111,6 +111,10 @@ function CancelDialog({
 function BookingCard({ booking }: { booking: Booking }) {
   const [showCancel, setShowCancel] = useState(false);
   const canCancel = booking.status === 'pending' || booking.status === 'confirmed';
+  const canPay = booking.payment_status === 'pending' && booking.status !== 'cancelled' && booking.status !== 'completed';
+  const mockPayment = useMockPayment();
+  const confirmPickup = usePickupBooking();
+  const rejectPickup = useRejectPickup();
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -163,17 +167,29 @@ function BookingCard({ booking }: { booking: Booking }) {
 
             {/* Payment badge */}
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                booking.payment_status === 'paid'
-                  ? 'bg-green-100 text-green-700'
-                  : booking.payment_status === 'refunded'
-                    ? 'bg-purple-100 text-purple-700'
-                    : 'bg-slate-100 text-slate-500'
-              }`}>
-                {booking.payment_status === 'paid' ? '✓ Đã thanh toán'
-                  : booking.payment_status === 'refunded' ? '↩ Đã hoàn tiền'
-                  : '⏳ Chưa thanh toán'}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                  booking.payment_status === 'paid'
+                    ? 'bg-green-100 text-green-700'
+                    : booking.payment_status === 'refunded'
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-slate-100 text-slate-500'
+                }`}>
+                  {booking.payment_status === 'paid' ? '✓ Đã thanh toán'
+                    : booking.payment_status === 'refunded' ? '↩ Đã hoàn tiền'
+                    : '⏳ Chưa thanh toán'}
+                </span>
+                {canPay && (
+                  <button
+                    onClick={() => mockPayment.mutate(booking.id)}
+                    disabled={mockPayment.isPending}
+                    className="text-xs bg-brand-500 text-white font-medium px-3 py-1 rounded-lg hover:bg-brand-600 transition-colors flex items-center gap-1"
+                  >
+                    {mockPayment.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                    Mô phỏng Thanh toán
+                  </button>
+                )}
+              </div>
 
               <div className="flex items-center gap-2">
                 {canCancel && (
@@ -183,6 +199,26 @@ function BookingCard({ booking }: { booking: Booking }) {
                   >
                     Hủy đơn
                   </button>
+                )}
+                {booking.status === 'confirmed' && booking.handed_over_at && (
+                  <>
+                    <button
+                      onClick={() => rejectPickup.mutate(booking.id)}
+                      disabled={rejectPickup.isPending}
+                      className="text-xs text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 font-medium transition-colors px-3 py-1.5 rounded-lg flex items-center gap-1"
+                    >
+                      {rejectPickup.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                      Chưa nhận được xe
+                    </button>
+                    <button
+                      onClick={() => confirmPickup.mutate(booking.id)}
+                      disabled={confirmPickup.isPending}
+                      className="text-xs text-white bg-green-500 hover:bg-green-600 font-medium transition-colors px-3 py-1.5 rounded-lg flex items-center gap-1"
+                    >
+                      {confirmPickup.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                      Đã nhận xe
+                    </button>
+                  </>
                 )}
                 {booking.car?.slug && (
                   <Link

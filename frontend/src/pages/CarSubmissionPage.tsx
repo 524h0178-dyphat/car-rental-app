@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Car, User, FileText, CheckCircle2, ChevronRight,
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import api from '@/services/api';
 import SEO from '@/components/common/SEO';
 import { formatPrice } from '@/utils/formatters';
+import { useAuthStore } from '@/stores/authStore';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface SubmissionForm {
@@ -384,6 +385,8 @@ export default function CarSubmissionPage() {
   const [form, setForm] = useState<SubmissionForm>(INIT);
   const [success, setSuccess] = useState(false);
 
+  const { isAuthenticated } = useAuthStore();
+
   const submit = useMutation({
     mutationFn: async (data: SubmissionForm) => {
       const res = await api.post('/car-submissions', {
@@ -434,6 +437,26 @@ export default function CarSubmissionPage() {
             <Link to="/" className="btn-primary w-full justify-center">Về trang chủ</Link>
             <Link to="/tim-xe" className="btn-outline w-full justify-center">Khám phá xe cho thuê</Link>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen pt-20 bg-slate-50 flex items-center justify-center px-4">
+        <SEO title="Yêu cầu đăng nhập" />
+        <div className="max-w-md w-full text-center py-12">
+          <div className="w-20 h-20 rounded-2xl bg-brand-100 flex items-center justify-center mx-auto mb-6">
+            <User className="w-10 h-10 text-brand-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Yêu cầu đăng nhập</h1>
+          <p className="text-slate-500 mb-8">
+            Bạn cần đăng nhập để có thể ký gửi xe. Điều này giúp chúng tôi quản lý xe và thanh toán thu nhập cho bạn một cách an toàn.
+          </p>
+          <Link to="/dang-nhap" state={{ from: '/ky-gui-xe' }} className="btn-primary w-full justify-center py-3">
+            Đăng nhập ngay
+          </Link>
         </div>
       </div>
     );

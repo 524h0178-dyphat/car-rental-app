@@ -9,7 +9,7 @@ import { useUpdateProfile, useChangePassword } from '@/hooks/useAuth';
 import { useMyBookings } from '@/hooks/useBooking';
 import { formatPrice } from '@/utils/formatters';
 
-type Tab = 'profile' | 'security' | 'bookings';
+type Tab = 'profile' | 'security' | 'bookings' | 'submissions';
 
 const PASSWORD_RULES = [
   { label: 'Ít nhất 8 ký tự',  test: (p: string) => p.length >= 8 },
@@ -299,11 +299,62 @@ function BookingsSummaryTab() {
   );
 }
 
+// ── Tab: Xe ký gửi ───────────────────────────────────────────────────────────
+function SubmissionsSummaryTab() {
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    import('@/services/api').then(({ default: api }) => {
+      api.get('/car-submissions/my')
+        .then(res => { setData(res.data); setIsLoading(false); })
+        .catch(() => setIsLoading(false));
+    });
+  }, []);
+
+  const COLORS: Record<string, string> = {
+    reviewing: 'bg-amber-100 text-amber-700',
+    approved:  'bg-green-100 text-green-700',
+    rejected:  'bg-red-100 text-red-600',
+  };
+
+  if (isLoading) return <div className="animate-pulse space-y-3">{Array.from({length:3}).map((_,i)=><div key={i} className="h-16 bg-slate-100 rounded-xl"/>)}</div>;
+
+  if (!data?.data?.length) return (
+    <div className="text-center py-12">
+      <Car className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+      <p className="text-slate-500 mb-4">Bạn chưa ký gửi xe nào</p>
+      <Link to="/ky-gui-xe" className="btn-primary text-sm py-2 px-5">Đăng ký ký gửi ngay</Link>
+    </div>
+  );
+
+  return (
+    <div className="space-y-3">
+      {data.data.map((s: any) => (
+        <div key={s.id} className="flex items-center justify-between gap-3 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-slate-800 truncate text-sm">{s.brand} {s.model}</p>
+            <p className="text-xs text-slate-500">
+              Biển số: {s.license_plate} • Ngày gửi: {new Date(s.created_at).toLocaleDateString('vi-VN')}
+            </p>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${COLORS[s.status] || 'bg-slate-100'}`}>
+              {s.status_label}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 const TABS: { key: Tab; label: string; icon: React.ElementType }[] = [
-  { key: 'profile',  label: 'Thông tin',   icon: User    },
-  { key: 'security', label: 'Bảo mật',     icon: Shield  },
-  { key: 'bookings', label: 'Đơn thuê xe', icon: Car     },
+  { key: 'profile',     label: 'Thông tin',   icon: User    },
+  { key: 'security',    label: 'Bảo mật',     icon: Shield  },
+  { key: 'bookings',    label: 'Đơn thuê xe', icon: Car     },
+  { key: 'submissions', label: 'Xe ký gửi',   icon: BadgeCheck },
 ];
 
 export default function ProfilePage() {
@@ -322,19 +373,19 @@ export default function ProfilePage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar tabs */}
           <aside className="lg:w-56 flex-shrink-0">
-            <nav className="card p-2 flex flex-row lg:flex-col gap-1">
+            <nav className="card p-2 flex flex-row lg:flex-col gap-1 overflow-x-auto">
               {TABS.map(({ key, label, icon: Icon }) => (
                 <button
                   key={key}
                   onClick={() => setTab(key)}
-                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex-1 lg:flex-none ${
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex-shrink-0 lg:flex-none ${
                     tab === key
                       ? 'bg-brand-500 text-white shadow-orange'
                       : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="hidden sm:inline">{label}</span>
+                  <span className="inline">{label}</span>
                 </button>
               ))}
 
@@ -349,9 +400,10 @@ export default function ProfilePage() {
 
           {/* Content */}
           <div className="flex-1 card p-6 sm:p-8">
-            {tab === 'profile'  && <ProfileTab />}
-            {tab === 'security' && <SecurityTab />}
-            {tab === 'bookings' && <BookingsSummaryTab />}
+            {tab === 'profile'     && <ProfileTab />}
+            {tab === 'security'    && <SecurityTab />}
+            {tab === 'bookings'    && <BookingsSummaryTab />}
+            {tab === 'submissions' && <SubmissionsSummaryTab />}
           </div>
         </div>
       </div>

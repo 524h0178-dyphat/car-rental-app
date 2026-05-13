@@ -108,13 +108,10 @@ export default function LoginPage() {
 
               {/* Password */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="mb-1.5">
                   <label htmlFor="login-password" className="block text-sm font-medium text-slate-300">
                     Mật khẩu
                   </label>
-                  <Link to="/quen-mat-khau" className="text-xs text-brand-400 hover:text-brand-300 transition-colors">
-                    Quên mật khẩu?
-                  </Link>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -136,6 +133,11 @@ export default function LoginPage() {
                   >
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
+                </div>
+                <div className="flex justify-end mt-2">
+                  <Link to="/quen-mat-khau" className="text-xs text-brand-400 hover:text-brand-300 transition-colors">
+                    Quên mật khẩu?
+                  </Link>
                 </div>
               </div>
 
