@@ -13,6 +13,9 @@ class LocationResource extends JsonResource
             'id'          => $this->id,
             'name'        => $this->name,
             'province'    => $this->province,
+            'display_name' => $this->name === $this->province
+                ? $this->province
+                : "{$this->name}, {$this->province}",
             'coordinates' => $this->coordinates,
         ];
     }

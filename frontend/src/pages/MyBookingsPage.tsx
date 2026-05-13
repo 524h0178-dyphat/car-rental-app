@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Car, Calendar, MapPin, ChevronRight, Loader2,
+  Car, Calendar, ChevronRight, Loader2,
   Clock, CheckCircle2, XCircle, Truck, AlertCircle, X,
 } from 'lucide-react';
 import { useMyBookings, useCancelBooking, useMockPayment, usePickupBooking, useRejectPickup } from '@/hooks/useBooking';
@@ -53,7 +53,7 @@ function CancelDialog({
       aria-modal="true"
       aria-labelledby="cancel-dialog-title"
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
         <div className="flex items-center justify-between mb-4">
           <h2 id="cancel-dialog-title" className="text-lg font-bold text-slate-900">Hủy đơn thuê xe</h2>
           <button
@@ -220,14 +220,22 @@ function BookingCard({ booking }: { booking: Booking }) {
                     </button>
                   </>
                 )}
-                {booking.car?.slug && (
+                {/* Write review for completed bookings */}
+                {booking.status === 'completed' && (
                   <Link
-                    to={`/xe/${booking.car.slug}`}
-                    className="flex items-center gap-1 text-xs text-brand-500 hover:text-brand-600 font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-50"
+                    to={`/viet-danh-gia/${booking.id}`}
+                    className="flex items-center gap-1 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-amber-50"
                   >
-                    Xem xe <ChevronRight className="w-3.5 h-3.5" />
+                    ⭐ Đánh giá
                   </Link>
                 )}
+                {/* Booking detail link */}
+                <Link
+                  to={`/dat-xe-cua-toi/${booking.id}`}
+                  className="flex items-center gap-1 text-xs text-brand-500 hover:text-brand-600 font-medium transition-colors px-3 py-1.5 rounded-lg hover:bg-brand-50"
+                >
+                  Chi tiết <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
 
@@ -295,7 +303,7 @@ export default function MyBookingsPage() {
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 tab === value
                   ? 'bg-brand-500 text-white shadow-orange'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-brand-300'
+                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300'
               }`}
             >
               {label}

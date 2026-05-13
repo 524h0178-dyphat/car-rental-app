@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
@@ -41,6 +42,16 @@ class Booking extends Model
         return $this->belongsTo(Car::class);
     }
 
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────
 
     /** Human-readable status label */
@@ -54,5 +65,11 @@ class Booking extends Model
             'cancelled' => 'Đã hủy',
             default     => $this->status,
         };
+    }
+
+    /** Whether this booking can be reviewed */
+    public function canBeReviewed(): bool
+    {
+        return $this->status === 'completed' && $this->review === null;
     }
 }

@@ -48,7 +48,7 @@ function RejectDialog({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fade-up">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-slate-900">Từ chối đơn thuê xe</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center">
@@ -251,7 +251,7 @@ export default function OwnerBookingsPage() {
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 tab === value
                   ? 'bg-brand-500 text-white shadow-orange'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-brand-300'
+                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-brand-300'
               }`}
             >
               {label}
@@ -262,7 +262,7 @@ export default function OwnerBookingsPage() {
         {isLoading && (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="card p-5 h-40 animate-pulse bg-white" />
+              <div key={i} className="card p-5 h-40 animate-pulse bg-white dark:bg-slate-800" />
             ))}
           </div>
         )}
@@ -275,7 +275,7 @@ export default function OwnerBookingsPage() {
         )}
 
         {!isLoading && !isError && (!filtered || filtered.length === 0) && (
-          <div className="text-center py-20 bg-white rounded-3xl border border-slate-100">
+          <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700">
             <Car className="w-16 h-16 text-slate-200 mx-auto mb-4" />
             <p className="text-slate-500 font-medium">Chưa có yêu cầu thuê xe nào</p>
           </div>

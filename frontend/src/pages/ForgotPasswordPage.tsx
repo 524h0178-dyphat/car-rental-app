@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-surface-900 to-slate-900 flex">
+    <div className="min-h-screen bg-surface-50 flex">
       {/* Left — Branding panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-600/90 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/55 to-slate-900/35" />
         <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -109,17 +109,17 @@ export default function ForgotPasswordPage() {
             <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
               <Car className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">
-              Skibidi<span className="text-brand-400">Car</span>
+            <span className="text-xl font-bold text-slate-900">
+              Skibidi<span className="text-brand-600">Car</span>
             </span>
           </Link>
 
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <div className="bg-white border border-cyan-100 rounded-2xl p-8 shadow-card">
             {/* Back to login */}
             {step === 1 && (
               <Link
                 to="/dang-nhap"
-                className="inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-200 text-sm mb-6 transition-colors"
+                className="inline-flex items-center gap-1.5 text-slate-500 hover:text-brand-700 text-sm mb-6 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Quay lại đăng nhập
@@ -129,7 +129,7 @@ export default function ForgotPasswordPage() {
             {step === 2 && (
               <button
                 onClick={() => setStep(1)}
-                className="inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-200 text-sm mb-6 transition-colors"
+                className="inline-flex items-center gap-1.5 text-slate-500 hover:text-brand-700 text-sm mb-6 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Quay lại nhập email
@@ -138,7 +138,7 @@ export default function ForgotPasswordPage() {
 
             {/* Error banner */}
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 mb-6">
+              <div className="flex items-center gap-2 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-6">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <p className="text-red-400 text-sm">{error}</p>
               </div>
@@ -147,14 +147,14 @@ export default function ForgotPasswordPage() {
             {/* STEP 1: REQUEST OTP */}
             {step === 1 && (
               <>
-                <h2 className="text-2xl font-bold text-white mb-1">Quên mật khẩu</h2>
-                <p className="text-slate-400 text-sm mb-8">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">Quên mật khẩu</h2>
+                <p className="text-slate-500 text-sm mb-8">
                   Nhập email đã đăng ký, chúng tôi sẽ gửi mã OTP gồm 6 chữ số để xác minh.
                 </p>
 
                 <form onSubmit={handleRequestOtp} className="space-y-5">
                   <div>
-                    <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-700 mb-1.5">
                       Địa chỉ Email
                     </label>
                     <div className="relative">
@@ -166,7 +166,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
                         required
-                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                        className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                       />
                     </div>
                   </div>
@@ -193,19 +193,19 @@ export default function ForgotPasswordPage() {
             {step === 2 && (
               <>
                 <div className="flex justify-center mb-6">
-                  <div className="w-16 h-16 rounded-full bg-brand-500/20 flex items-center justify-center">
-                    <KeyRound className="w-8 h-8 text-brand-400" />
+                  <div className="w-16 h-16 rounded-full bg-cyan-50 flex items-center justify-center">
+                    <KeyRound className="w-8 h-8 text-brand-500" />
                   </div>
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-1 text-center">Xác minh OTP</h2>
-                <p className="text-slate-400 text-sm mb-8 text-center">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1 text-center">Xác minh OTP</h2>
+                <p className="text-slate-500 text-sm mb-8 text-center">
                   Mã xác minh gồm 6 chữ số đã được gửi đến email <br />
-                  <span className="text-brand-400 font-medium">{email}</span>
+                  <span className="text-brand-600 font-medium">{email}</span>
                 </p>
 
                 <form onSubmit={handleVerifyOtp} className="space-y-5">
                   <div>
-                    <label htmlFor="otp" className="block text-sm font-medium text-slate-300 mb-1.5 text-center">
+                    <label htmlFor="otp" className="block text-sm font-medium text-slate-700 mb-1.5 text-center">
                       Nhập mã OTP
                     </label>
                     <input
@@ -233,7 +233,7 @@ export default function ForgotPasswordPage() {
                       }}
                       placeholder="• • • • • •"
                       required
-                      className="w-full text-center tracking-[1em] py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-mono"
+                      className="w-full text-center tracking-[1em] py-4 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xl focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all font-mono"
                     />
                   </div>
 
@@ -259,18 +259,18 @@ export default function ForgotPasswordPage() {
             {step === 3 && (
               <>
                 <div className="flex justify-center mb-6">
-                  <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-8 h-8 text-green-400" />
+                  <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
+                    <CheckCircle2 className="w-8 h-8 text-green-500" />
                   </div>
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-1 text-center">Đặt mật khẩu mới</h2>
-                <p className="text-slate-400 text-sm mb-8 text-center">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1 text-center">Đặt mật khẩu mới</h2>
+                <p className="text-slate-500 text-sm mb-8 text-center">
                   Mã OTP đã được xác minh. Vui lòng nhập mật khẩu mới.
                 </p>
 
                 <form onSubmit={handleResetPassword} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Mật khẩu mới
                     </label>
                     <div className="relative">
@@ -282,13 +282,13 @@ export default function ForgotPasswordPage() {
                         placeholder="Tối thiểu 8 ký tự"
                         required
                         minLength={8}
-                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                        className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Xác nhận mật khẩu
                     </label>
                     <div className="relative">
@@ -300,7 +300,7 @@ export default function ForgotPasswordPage() {
                         placeholder="Nhập lại mật khẩu mới"
                         required
                         minLength={8}
-                        className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                        className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                       />
                     </div>
                   </div>

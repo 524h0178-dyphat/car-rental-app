@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('brand');
             $table->string('model');
             $table->unsignedSmallInteger('year');
-            $table->string('license_plate', 20);
+            $table->string('license_plate', 20)->unique();
             $table->enum('transmission', ['Số tự động', 'Số sàn']);
             $table->enum('fuel', ['Xăng', 'Dầu', 'Điện', 'Hybrid'])->default('Xăng');
             $table->unsignedTinyInteger('seats');

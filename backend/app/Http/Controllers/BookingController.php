@@ -34,6 +34,67 @@ class BookingController extends Controller
     }
 
     /**
+     * POST /api/v1/bookings/preview
+     * Check availability and calculate price WITHOUT creating a booking.
+     */
+    public function preview(Request $request): JsonResponse
+    {
+        $request->validate([
+            'car_id'     => ['required', 'integer', 'exists:cars,id'],
+            'start_date' => ['required', 'date', 'after_or_equal:today'],
+            'end_date'   => ['required', 'date', 'after:start_date'],
+        ]);
+
+        $car = Car::findOrFail($request->car_id);
+
+        if ($car->status !== 'available') {
+            return response()->json(['message' => 'Xe hiện không khả dụng để đặt.'], 422);
+        }
+
+        $startDate  = \Carbon\Carbon::parse($request->start_date);
+        $endDate    = \Carbon\Carbon::parse($request->end_date);
+        $totalDays  = (int) $startDate->diffInDays($endDate);
+
+        if ($totalDays < 1) {
+            return response()->json(['message' => 'Thời gian thuê tối thiểu là 1 ngày.'], 422);
+        }
+
+        // Check for overlapping bookings
+        $overlap = Booking::where('car_id', $car->id)
+            ->whereNotIn('status', ['cancelled', 'completed'])
+            ->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('start_date', [$startDate, $endDate])
+                  ->orWhereBetween('end_date', [$startDate, $endDate])
+                  ->orWhere(function ($q2) use ($startDate, $endDate) {
+                      $q2->where('start_date', '<=', $startDate)
+                         ->where('end_date', '>=', $endDate);
+                  });
+            })
+            ->exists();
+
+        if ($overlap) {
+            return response()->json([
+                'message' => 'Xe đã có người đặt trong khoảng thời gian này. Vui lòng chọn ngày khác.',
+            ], 422);
+        }
+
+        $totalPrice = $car->price_per_day * $totalDays;
+
+        return response()->json([
+            'data' => [
+                'car_id'        => $car->id,
+                'car_name'      => $car->name,
+                'start_date'    => $startDate->toDateString(),
+                'end_date'      => $endDate->toDateString(),
+                'total_days'    => $totalDays,
+                'price_per_day' => $car->price_per_day,
+                'total_price'   => $totalPrice,
+                'available'     => true,
+            ],
+        ]);
+    }
+
+    /**
      * POST /api/v1/bookings
      * Create a new booking.
      */
@@ -294,6 +355,8 @@ class BookingController extends Controller
             'picked_up_at' => now(),
         ]);
 
+        $booking->car->update(['status' => 'rented']);
+
         // Payout logic: transfer money to owner's wallet (minus platform fee)
         if ($booking->payment_status === 'paid' && $booking->payout_status === 'pending') {
             $platformFeePercent = 10; // 10% fee
@@ -389,6 +452,8 @@ class BookingController extends Controller
             'status'      => 'completed',
             'returned_at' => now(),
         ]);
+
+        $booking->car->update(['status' => 'available']);
 
         return response()->json([
             'message' => 'Xác nhận trả xe thành công.',

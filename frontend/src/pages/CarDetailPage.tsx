@@ -4,10 +4,11 @@ import {
   MapPin, Users, Fuel, Settings, Calendar, ChevronLeft,
   ChevronRight, Shield, Check, ArrowLeft, Loader2, Lock,
 } from 'lucide-react';
-import { useCarDetail } from '@/hooks/useCarDetail';
+import { useCarAvailability, useCarDetail } from '@/hooks/useCarDetail';
 import { useAuthStore } from '@/stores/authStore';
 import { formatPrice } from '@/utils/formatters';
-import ReviewsSection, { StarRating } from '@/components/features/ReviewsSection';
+import { formatLocation } from '@/utils/location';
+import ReviewsSection from '@/components/features/ReviewsSection';
 import SEO from '@/components/common/SEO';
 import JsonLdBreadcrumb, { JsonLdVehicle } from '@/components/common/JsonLd';
 
@@ -80,6 +81,7 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(tomorrow);
   const { isAuthenticated } = useAuthStore();
+  const { data: unavailable = [] } = useCarAvailability(slug);
 
   const days = Math.max(
     1,
@@ -88,6 +90,9 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
     )
   );
   const total = days * pricePerDay;
+  const hasConflict = unavailable.some((range) =>
+    startDate < range.end_date && endDate > range.start_date
+  );
 
   return (
     <div className="card p-6 sticky top-24" aria-label="Form đặt xe">
@@ -125,6 +130,33 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
         </div>
       </div>
 
+      {unavailable.length > 0 && (
+        <div className="mb-5 rounded-xl border border-cyan-100 bg-cyan-50/60 p-4">
+          <p className="text-sm font-semibold text-slate-800 mb-2 flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-brand-500" />
+            Lịch đã có người đặt
+          </p>
+          <div className="space-y-1.5">
+            {unavailable.slice(0, 4).map((range) => (
+              <div key={range.id} className="flex items-center justify-between text-xs text-slate-600">
+                <span>{range.start_date}</span>
+                <span className="text-slate-300">đến</span>
+                <span>{range.end_date}</span>
+              </div>
+            ))}
+          </div>
+          {unavailable.length > 4 && (
+            <p className="text-xs text-slate-400 mt-2">+{unavailable.length - 4} khoảng ngày khác</p>
+          )}
+        </div>
+      )}
+
+      {hasConflict && (
+        <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          Khoảng ngày này đã có người đặt. Vui lòng chọn ngày khác.
+        </div>
+      )}
+
       {/* Price breakdown */}
       <div className="bg-slate-50 rounded-xl p-4 mb-5 space-y-2 text-sm">
         <div className="flex justify-between text-slate-600">
@@ -144,7 +176,9 @@ function BookingFormSticky({ pricePerDay, slug }: { pricePerDay: number; slug: s
       {isAuthenticated ? (
         <Link
           to={`/dat-xe/${slug}?start=${startDate}&end=${endDate}`}
-          className="btn-primary w-full justify-center"
+          aria-disabled={hasConflict}
+          onClick={(e) => { if (hasConflict) e.preventDefault(); }}
+          className={`btn-primary w-full justify-center ${hasConflict ? 'opacity-50 pointer-events-none' : ''}`}
         >
           <Calendar className="w-4 h-4" />
           Đặt xe ngay
@@ -246,7 +280,7 @@ export default function CarDetailPage() {
               {car.location && (
                 <p className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
                   <MapPin className="w-4 h-4 text-brand-400" />
-                  {car.location.name}, {car.location.province}
+                  {formatLocation(car.location)}
                 </p>
               )}
             </div>

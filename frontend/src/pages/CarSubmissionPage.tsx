@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Car, User, FileText, CheckCircle2, ChevronRight,
   ArrowLeft, Loader2, AlertCircle, MapPin, Settings,
@@ -31,13 +31,14 @@ interface SubmissionForm {
   expected_price_per_day: string;
   location_province: string;
   description: string;
+  images: string[];
 }
 
 const INIT: SubmissionForm = {
   owner_name: '', owner_phone: '', owner_email: '', owner_cccd: '', owner_address: '',
   brand: '', model: '', year: '', license_plate: '',
   transmission: 'Số tự động', fuel: 'Xăng', seats: '5',
-  expected_price_per_day: '', location_province: '', description: '',
+  expected_price_per_day: '', location_province: '', description: '', images: [''],
 };
 
 // ── Step indicator ────────────────────────────────────────────────────────────
@@ -199,6 +200,15 @@ const PROVINCES = [
 function StepCar({ form, setForm, onNext, onBack }: any) {
   const s = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((p: any) => ({ ...p, [k]: e.target.value }));
+  const setImage = (idx: number, value: string) =>
+    setForm((p: any) => ({
+      ...p,
+      images: p.images.map((url: string, i: number) => (i === idx ? value : url)),
+    }));
+  const addImage = () =>
+    setForm((p: any) => ({ ...p, images: [...p.images, ''].slice(0, 6) }));
+  const removeImage = (idx: number) =>
+    setForm((p: any) => ({ ...p, images: p.images.filter((_: string, i: number) => i !== idx) }));
 
   const valid = form.brand && form.model && form.year && form.license_plate &&
     form.expected_price_per_day && form.location_province;
@@ -291,6 +301,43 @@ function StepCar({ form, setForm, onNext, onBack }: any) {
             placeholder="Tình trạng xe, trang bị đặc biệt, lịch sử bảo dưỡng..."
             className="input-field resize-none" />
         </div>
+        <div className="sm:col-span-2">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-sm font-medium text-slate-700">
+              Ảnh xe <span className="text-slate-400 font-normal">(URL, tối đa 6 ảnh)</span>
+            </label>
+            <button
+              type="button"
+              onClick={addImage}
+              disabled={form.images.length >= 6}
+              className="text-xs font-medium text-brand-600 hover:text-brand-700 disabled:opacity-40"
+            >
+              Thêm ảnh
+            </button>
+          </div>
+          <div className="space-y-2">
+            {form.images.map((url: string, idx: number) => (
+              <div key={idx} className="flex gap-2">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setImage(idx, e.target.value)}
+                  placeholder="https://example.com/car-image.jpg"
+                  className="input-field"
+                />
+                {form.images.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    className="px-3 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50"
+                  >
+                    Xóa
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-3 pt-2">
@@ -325,6 +372,7 @@ function StepConfirm({ form, onBack, onSubmit, isLoading, error }: any) {
         ['Số chỗ', `${form.seats} chỗ`],
         ['Giá kỳ vọng', formatPrice(+form.expected_price_per_day) + '/ngày'],
         ['Tỉnh/Thành', form.location_province],
+        ['Ảnh xe', `${form.images.filter(Boolean).length} ảnh`],
       ],
     },
   ];
@@ -380,7 +428,6 @@ function StepConfirm({ form, onBack, onSubmit, isLoading, error }: any) {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function CarSubmissionPage() {
-  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<SubmissionForm>(INIT);
   const [success, setSuccess] = useState(false);
@@ -394,6 +441,7 @@ export default function CarSubmissionPage() {
         year: parseInt(data.year),
         seats: parseInt(data.seats),
         expected_price_per_day: parseInt(data.expected_price_per_day),
+        images: data.images.map((url) => url.trim()).filter(Boolean),
       });
       return res.data;
     },

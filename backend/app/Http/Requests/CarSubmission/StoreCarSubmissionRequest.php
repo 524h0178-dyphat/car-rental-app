@@ -19,13 +19,15 @@ class StoreCarSubmissionRequest extends FormRequest
             'brand'                   => ['required', 'string', 'max:60'],
             'model'                   => ['required', 'string', 'max:100'],
             'year'                    => ['required', 'integer', 'min:2010', 'max:' . (date('Y') + 1)],
-            'license_plate'           => ['required', 'string', 'max:20'],
+            'license_plate'           => ['required', 'string', 'max:20', 'unique:car_submissions,license_plate'],
             'transmission'            => ['required', 'in:Số tự động,Số sàn'],
             'fuel'                    => ['required', 'in:Xăng,Dầu,Điện,Hybrid'],
             'seats'                   => ['required', 'integer', 'in:4,5,7,9'],
             'expected_price_per_day'  => ['required', 'integer', 'min:100000'],
             'location_province'       => ['required', 'string', 'max:100'],
             'description'             => ['nullable', 'string', 'max:2000'],
+            'images'                  => ['nullable', 'array', 'max:6'],
+            'images.*'                => ['required', 'url', 'max:2048'],
         ];
     }
 
@@ -41,6 +43,7 @@ class StoreCarSubmissionRequest extends FormRequest
             'year.required'                   => 'Vui lòng nhập năm sản xuất.',
             'year.min'                        => 'Xe sản xuất từ năm 2010 trở lên.',
             'license_plate.required'          => 'Vui lòng nhập biển số xe.',
+            'license_plate.unique'            => 'Biển số xe này đã được đăng ký.',
             'transmission.required'           => 'Vui lòng chọn hộp số.',
             'fuel.required'                   => 'Vui lòng chọn loại nhiên liệu.',
             'seats.required'                  => 'Vui lòng chọn số chỗ ngồi.',

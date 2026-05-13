@@ -51,4 +51,16 @@ class AdminBookingController extends Controller
             'data'    => new BookingResource($booking->load('car.images')),
         ]);
     }
+
+    /**
+     * GET /api/v1/admin/bookings/{id}
+     * Show a single booking with full detail.
+     */
+    public function show(int $id): JsonResponse
+    {
+        $booking = Booking::with(['car:id,name,slug', 'user:id,name,email,phone', 'car.images'])
+            ->findOrFail($id);
+
+        return response()->json(['data' => new BookingResource($booking)]);
+    }
 }

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/services/api';
-import type { Booking, BookingStatus } from '@/types/booking';
+import type { BookingStatus } from '@/types/booking';
 
 interface AdminStats {
   total_cars: number;

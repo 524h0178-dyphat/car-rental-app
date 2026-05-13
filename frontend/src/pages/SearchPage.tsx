@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ArrowUpDown, ChevronLeft, ChevronRight, SlidersHorizontal, X, Filter, Loader2 } from 'lucide-react';
+import { ArrowUpDown, Calendar, ChevronLeft, ChevronRight, SlidersHorizontal, X, Loader2 } from 'lucide-react';
 import FilterSidebar from '@/components/features/FilterSidebar';
 import CarCard, { CarCardSkeleton } from '@/components/features/CarCard';
 import SearchAutocomplete from '@/components/features/SearchAutocomplete';
@@ -17,7 +17,7 @@ const SORT_OPTIONS = [
 
 const URL_FILTER_KEYS: (keyof CarFilters)[] = [
   'seats', 'transmission', 'fuel', 'brand', 'province',
-  'price_min', 'price_max', 'sort_by', 'sort_dir', 'per_page', 'page',
+  'price_min', 'price_max', 'start_date', 'end_date', 'sort_by', 'sort_dir', 'per_page', 'page',
 ];
 
 /** Calls `onIntersect` when sentinel element enters the viewport */
@@ -135,7 +135,7 @@ export default function SearchPage() {
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
                 <ArrowUpDown className="w-4 h-4" />
                 <label htmlFor="sort-select" className="sr-only">Sắp xếp</label>
                 <select
@@ -148,6 +148,28 @@ export default function SearchPage() {
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
+                <div className="flex flex-wrap items-center gap-2 rounded-xl border border-cyan-100 bg-white px-3 py-2 shadow-sm">
+                  <Calendar className="w-4 h-4 text-brand-500" />
+                  <label htmlFor="search-start" className="sr-only">Ngày nhận xe</label>
+                  <input
+                    id="search-start"
+                    type="date"
+                    value={filters.start_date ?? ''}
+                    min={new Date().toISOString().split('T')[0]}
+                    onChange={(e) => setFilters({ start_date: e.target.value, page: '1' })}
+                    className="text-sm text-slate-700 outline-none"
+                  />
+                  <span className="text-slate-300">-</span>
+                  <label htmlFor="search-end" className="sr-only">Ngày trả xe</label>
+                  <input
+                    id="search-end"
+                    type="date"
+                    value={filters.end_date ?? ''}
+                    min={filters.start_date || new Date().toISOString().split('T')[0]}
+                    onChange={(e) => setFilters({ end_date: e.target.value, page: '1' })}
+                    className="text-sm text-slate-700 outline-none"
+                  />
+                </div>
               </div>
 
               <div className="flex items-center gap-3">

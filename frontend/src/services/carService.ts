@@ -1,6 +1,13 @@
 import type { Car, CarFilters, PaginatedResponse } from '@/types';
 import api from './api';
 
+export interface CarUnavailableRange {
+  id: number;
+  start_date: string;
+  end_date: string;
+  status: string;
+}
+
 export const carService = {
   /** GET /cars/featured – Homepage featured cars */
   getFeatured: async (): Promise<Car[]> => {
@@ -21,6 +28,12 @@ export const carService = {
   /** GET /cars/:slug – Detail page */
   getCarBySlug: async (slug: string): Promise<Car> => {
     const res = await api.get<{ data: Car }>(`/cars/${slug}`);
+    return res.data.data;
+  },
+
+  /** GET /cars/:slug/availability */
+  getAvailability: async (slug: string): Promise<CarUnavailableRange[]> => {
+    const res = await api.get<{ data: CarUnavailableRange[] }>(`/cars/${slug}/availability`);
     return res.data.data;
   },
 };

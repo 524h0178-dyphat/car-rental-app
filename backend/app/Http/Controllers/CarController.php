@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CarResource;
 use App\Models\Car;
+use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -27,7 +29,10 @@ class CarController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Car::with(['location', 'images', 'features'])
-            ->where('status', 'available');
+            ->where('status', 'available')
+            ->whereDoesntHave('bookings', function ($q) {
+                $q->where('status', 'active');
+            });
 
         // --- Filter by seats ---
         if ($request->filled('seats')) {
@@ -66,6 +71,22 @@ class CarController extends Controller
             $query->where('price_per_day', '<=', (int) $request->input('price_max'));
         }
 
+        if ($request->filled(['start_date', 'end_date'])) {
+            $request->validate([
+                'start_date' => ['date', 'after_or_equal:today'],
+                'end_date' => ['date', 'after:start_date'],
+            ]);
+
+            $startDate = Carbon::parse($request->input('start_date'))->toDateString();
+            $endDate = Carbon::parse($request->input('end_date'))->toDateString();
+
+            $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
+                $q->whereNotIn('status', ['cancelled', 'completed'])
+                    ->where('start_date', '<', $endDate)
+                    ->where('end_date', '>', $startDate);
+            });
+        }
+
         // --- Filter by features ---
         if ($request->filled('features')) {
             $featureIds = array_map('intval', explode(',', $request->input('features')));
@@ -97,6 +118,9 @@ class CarController extends Controller
     {
         $cars = Car::with(['location', 'images', 'features'])
             ->where('status', 'available')
+            ->whereDoesntHave('bookings', function ($q) {
+                $q->where('status', 'active');
+            })
             ->latest()
             ->limit(8)
             ->get();
@@ -119,5 +143,27 @@ class CarController extends Controller
         }
 
         return new CarResource($car);
+    }
+
+    /**
+     * GET /api/cars/{slug}/availability
+     * Return booked date ranges for a car.
+     */
+    public function availability(string $slug): JsonResponse
+    {
+        $car = Car::where('slug', $slug)->firstOrFail();
+
+        $ranges = Booking::where('car_id', $car->id)
+            ->whereNotIn('status', ['cancelled', 'completed'])
+            ->orderBy('start_date')
+            ->get(['id', 'start_date', 'end_date', 'status'])
+            ->map(fn($booking) => [
+                'id' => $booking->id,
+                'start_date' => $booking->start_date->format('Y-m-d'),
+                'end_date' => $booking->end_date->format('Y-m-d'),
+                'status' => $booking->status,
+            ]);
+
+        return response()->json(['data' => $ranges]);
     }
 }

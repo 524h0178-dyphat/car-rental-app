@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Database\Seeders;
 
@@ -34,11 +34,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ── Seed 30 xe thực tế (RealCarSeeder) ──────────────────────────────
-        // Tạo locations, features, và 30 xe thật với ảnh Unsplash
         $this->call(RealCarSeeder::class);
 
         // ── Thêm 20 xe thực tế nữa (DeleteFakerAndAdd20Seeder) ──────────────
-        // Seeder này không xóa gì vì không có xe fake, chỉ thêm 20 xe mới
         $this->call(DeleteFakerAndAdd20Seeder::class);
 
         $this->command->info('');

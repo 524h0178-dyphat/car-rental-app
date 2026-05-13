@@ -1,11 +1,13 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import {
-  Car, Users, Calendar, TrendingUp, Loader2,
+  Car, Users, Calendar, TrendingUp,
   Search, RefreshCw, BarChart3,
   CheckCircle2, Clock, Truck, XCircle, FileText,
+  Star, EyeOff, Trash2, Lock, Unlock,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 import {
   useAdminStats, useAdminBookings, useUpdateBookingStatus,
@@ -14,6 +16,7 @@ import {
 import type { CarSubmissionItem, SubmissionStatus } from '@/hooks/useAdmin';
 import { formatPrice } from '@/utils/formatters';
 import type { BookingStatus } from '@/types/booking';
+import { adminService } from '@/services/adminService';
 
 // ── Stat card ────────────────────────────────────────────────────────────────
 function StatCard({
@@ -71,9 +74,9 @@ function StatusUpdater({ id, current }: { id: number; current: BookingStatus }) 
   if (!nexts.length) return <StatusBadge status={current} />;
 
   return (
-    <div className="relative group">
+    <div className="flex flex-wrap items-center gap-2">
       <StatusBadge status={current} />
-      <div className="absolute left-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 min-w-[150px] hidden group-hover:block">
+      <div className="flex flex-wrap items-center gap-1.5">
         {nexts.map((s) => (
           <button
             key={s}
@@ -84,7 +87,7 @@ function StatusUpdater({ id, current }: { id: number; current: BookingStatus }) 
               })
             }
             disabled={update.isPending}
-            className="block w-full text-left px-3 py-2 text-xs hover:bg-slate-50 transition-colors first:rounded-t-xl last:rounded-b-xl text-slate-700"
+            className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             → {STATUS_CFG[s].label}
           </button>
@@ -112,12 +115,12 @@ function SubmissionStatusUpdater({ item }: { item: CarSubmissionItem }) {
   const cfg = SUB_STATUS_CFG[item.status];
 
   return (
-    <div className="relative group">
+    <div className="flex flex-wrap items-center gap-2">
       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${cfg.color}`}>
         {cfg.label}
       </span>
       {nexts.length > 0 && (
-        <div className="absolute left-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 min-w-[150px] hidden group-hover:block">
+        <div className="flex flex-wrap items-center gap-1.5">
           {nexts.map((s) => (
             <button
               key={s}
@@ -129,7 +132,7 @@ function SubmissionStatusUpdater({ item }: { item: CarSubmissionItem }) {
                 }
               )}
               disabled={update.isPending}
-              className="block w-full text-left px-3 py-2 text-xs hover:bg-slate-50 transition-colors first:rounded-t-xl last:rounded-b-xl text-slate-700"
+              className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               → {SUB_STATUS_CFG[s].label}
             </button>
@@ -376,10 +379,261 @@ function BookingsTable() {
   );
 }
 
+// ── Users Table ──────────────────────────────────────────────────────────────
+function UsersTable() {
+  const [page, setPage]   = useState(1);
+  const [search, setSearch] = useState('');
+  const [query, setQuery]   = useState('');
+  const [status, setStatus] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['admin-users', page, query, status],
+    queryFn: () => adminService.getUsers({ search: query || undefined, status: status || undefined, page }),
+  });
+
+  const toggleStatus = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: 'active' | 'blocked' }) =>
+      adminService.updateUserStatus(id, status),
+    onSuccess: (_, vars) => {
+      toast.success(vars.status === 'blocked' ? 'Đã khóa tài khoản.' : 'Đã mở khóa tài khoản.');
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
+    onError: () => toast.error('Cập nhật thất bại.'),
+  });
+
+  return (
+    <div className="card overflow-hidden">
+      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
+        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+          <Users className="w-5 h-5 text-brand-500" /> Quản lý thành viên
+        </h2>
+        <div className="flex gap-2 flex-wrap">
+          <select
+            value={status}
+            onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          >
+            <option value="">Tất cả</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="blocked">Đã khóa</option>
+          </select>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tên / Email / SĐT..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { setQuery(search); setPage(1); } }}
+              className="pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+            />
+          </div>
+          <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
+            <RefreshCw className="w-4 h-4 text-slate-500" />
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 border-b border-slate-100">
+            <tr>
+              {['ID', 'Tên', 'Email', 'Điện thoại', 'Trạng thái', 'Ngày tạo', 'Hành động'].map((h) => (
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    {Array.from({ length: 7 }).map((_, j) => (
+                      <td key={j} className="px-4 py-3"><div className="h-4 bg-slate-100 rounded w-3/4" /></td>
+                    ))}
+                  </tr>
+                ))
+              : !data?.data?.length
+                ? (<tr><td colSpan={7} className="px-4 py-12 text-center text-slate-400 text-sm">Không có người dùng nào.</td></tr>)
+                : data.data.map((u) => (
+                  <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500">#{u.id}</td>
+                    <td className="px-4 py-3 font-medium text-slate-800">{u.name}</td>
+                    <td className="px-4 py-3 text-slate-600">{u.email}</td>
+                    <td className="px-4 py-3 text-slate-600">{u.phone ?? '—'}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+                        u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'
+                      }`}>
+                        {u.status === 'active' ? <><CheckCircle2 className="w-3 h-3" />Hoạt động</> : <><XCircle className="w-3 h-3" />Đã khóa</>}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-500 text-xs">{new Date(u.created_at).toLocaleDateString('vi-VN')}</td>
+                    <td className="px-4 py-3">
+                      <button
+                        id={`toggle-user-${u.id}`}
+                        onClick={() => toggleStatus.mutate({ id: u.id, status: u.status === 'active' ? 'blocked' : 'active' })}
+                        disabled={toggleStatus.isPending}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                          u.status === 'active'
+                            ? 'text-red-600 bg-red-50 hover:bg-red-100'
+                            : 'text-green-700 bg-green-50 hover:bg-green-100'
+                        }`}
+                      >
+                        {u.status === 'active' ? <><Lock className="w-3 h-3" />Khóa</> : <><Unlock className="w-3 h-3" />Mở khóa</>}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            }
+          </tbody>
+        </table>
+      </div>
+      {data?.meta && data.meta.last_page > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+          <p className="text-xs text-slate-500">{data.meta.total} người dùng · Trang {page}/{data.meta.last_page}</p>
+          <div className="flex gap-2">
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Reviews Table ─────────────────────────────────────────────────────────────
+function ReviewsTable() {
+  const [page, setPage]     = useState(1);
+  const [status, setStatus] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['admin-reviews', page, status],
+    queryFn: () => adminService.getReviews({ status: status || undefined, page }),
+  });
+
+  const hide = useMutation({
+    mutationFn: (id: number) => adminService.hideReview(id),
+    onSuccess: () => { toast.success('Đã ẩn đánh giá.'); queryClient.invalidateQueries({ queryKey: ['admin-reviews'] }); },
+    onError: () => toast.error('Thao tác thất bại.'),
+  });
+
+  const remove = useMutation({
+    mutationFn: (id: number) => adminService.deleteReview(id),
+    onSuccess: () => { toast.success('Đã xóa đánh giá.'); queryClient.invalidateQueries({ queryKey: ['admin-reviews'] }); },
+    onError: () => toast.error('Thao tác thất bại.'),
+  });
+
+  return (
+    <div className="card overflow-hidden">
+      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
+        <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+          <Star className="w-5 h-5 text-brand-500" /> Kiểm duyệt đánh giá
+        </h2>
+        <div className="flex gap-2">
+          <select
+            value={status}
+            onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+            className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          >
+            <option value="">Tất cả</option>
+            <option value="visible">Hiển thị</option>
+            <option value="hidden">Đã ẩn</option>
+          </select>
+          <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
+            <RefreshCw className="w-4 h-4 text-slate-500" />
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 border-b border-slate-100">
+            <tr>
+              {['ID', 'Người dùng', 'Xe', 'Sao', 'Nhận xét', 'Trạng thái', 'Hành động'].map((h) => (
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    {Array.from({ length: 7 }).map((_, j) => (
+                      <td key={j} className="px-4 py-3"><div className="h-4 bg-slate-100 rounded w-3/4" /></td>
+                    ))}
+                  </tr>
+                ))
+              : !data?.data?.length
+                ? (<tr><td colSpan={7} className="px-4 py-12 text-center text-slate-400 text-sm">Chưa có đánh giá nào.</td></tr>)
+                : data.data.map((r) => (
+                  <tr key={r.id} className={`hover:bg-slate-50/50 transition-colors ${r.deleted_at ? 'opacity-50' : ''}`}>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500">#{r.id}</td>
+                    <td className="px-4 py-3 text-slate-700">{r.user?.name ?? '—'}</td>
+                    <td className="px-4 py-3 text-slate-600 text-xs">{r.car?.name ?? '—'}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`w-3.5 h-3.5 ${i < r.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}`} />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600 max-w-[200px] truncate">{r.comment ?? <span className="text-slate-300 italic">—</span>}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                        r.status === 'visible' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                      }`}>
+                        {r.status === 'visible' ? 'Hiển thị' : 'Đã ẩn'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5">
+                        {r.status === 'visible' && !r.deleted_at && (
+                          <button
+                            id={`hide-review-${r.id}`}
+                            onClick={() => { if (confirm('Ẩn đánh giá này?')) hide.mutate(r.id); }}
+                            disabled={hide.isPending}
+                            className="p-1.5 rounded-lg text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors"
+                            title="Ẩn"
+                          >
+                            <EyeOff className="w-4 h-4" />
+                          </button>
+                        )}
+                        {!r.deleted_at && (
+                          <button
+                            id={`delete-review-${r.id}`}
+                            onClick={() => { if (confirm('Xóa vĩnh viễn đánh giá này?')) remove.mutate(r.id); }}
+                            disabled={remove.isPending}
+                            className="p-1.5 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                            title="Xóa"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+            }
+          </tbody>
+        </table>
+      </div>
+      {data?.meta && data.meta.last_page > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+          <p className="text-xs text-slate-500">{data.meta.total} đánh giá · Trang {page}/{data.meta.last_page}</p>
+          <div className="flex gap-2">
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main Admin Dashboard ──────────────────────────────────────────────────────
 export default function AdminPage() {
   const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<'bookings' | 'submissions'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'submissions' | 'users' | 'reviews'>('bookings');
   const { data: stats, isLoading } = useAdminStats();
 
   // Guard: only admin
@@ -420,7 +674,7 @@ export default function AdminPage() {
             : [
                 { label: 'Tổng xe',       value: stats?.total_cars     ?? 0, sub: `${stats?.available_cars ?? 0} xe còn trống`,  icon: Car,         color: 'bg-brand-500' },
                 { label: 'Người dùng',    value: stats?.total_users    ?? 0, sub: 'Khách hàng đã đăng ký',                        icon: Users,       color: 'bg-blue-500'  },
-                { label: 'Tổng đơn',      value: stats?.total_bookings ?? 0, sub: `${stats?.bookings_status?.pending ?? 0} chờ xác nhận`, icon: Calendar,    color: 'bg-purple-500'},
+                { label: 'Tổng đơn',      value: stats?.total_bookings ?? 0, sub: `${stats?.bookings_status?.pending ?? 0} chờ xác nhận`, icon: Calendar,    color: 'bg-sky-500'},
                 { label: 'Doanh thu',     value: formatPrice(stats?.revenue ?? 0), sub: 'Từ đơn đã xác nhận',                   icon: TrendingUp,  color: 'bg-green-500' },
               ].map((s) => <StatCard key={s.label} {...s} />)
           }
@@ -484,30 +738,32 @@ export default function AdminPage() {
         )}
 
         {/* Tab switcher */}
-        <div className="flex gap-2 mb-6 border-b border-slate-200">
-          <button
-            onClick={() => setActiveTab('bookings')}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-              activeTab === 'bookings'
-                ? 'border-brand-500 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            <Calendar className="w-4 h-4" /> Đơn thuê xe
-          </button>
-          <button
-            onClick={() => setActiveTab('submissions')}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-              activeTab === 'submissions'
-                ? 'border-brand-500 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            <FileText className="w-4 h-4" /> Xe ký gửi
-          </button>
+        <div className="flex gap-2 mb-6 border-b border-slate-200 overflow-x-auto">
+          {([
+            { key: 'bookings',    label: 'Đơn thuê xe',   icon: Calendar  },
+            { key: 'submissions', label: 'Xe ký gửi',      icon: FileText  },
+            { key: 'users',       label: 'Thành viên',     icon: Users     },
+            { key: 'reviews',     label: 'Đánh giá',       icon: Star      },
+          ] as const).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              id={`admin-tab-${key}`}
+              onClick={() => setActiveTab(key)}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors flex-shrink-0 ${
+                activeTab === key
+                  ? 'border-brand-500 text-brand-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Icon className="w-4 h-4" /> {label}
+            </button>
+          ))}
         </div>
 
-        {activeTab === 'bookings' ? <BookingsTable /> : <CarSubmissionsTable />}
+        {activeTab === 'bookings'    && <BookingsTable />}
+        {activeTab === 'submissions' && <CarSubmissionsTable />}
+        {activeTab === 'users'       && <UsersTable />}
+        {activeTab === 'reviews'     && <ReviewsTable />}
 
       </div>
     </div>

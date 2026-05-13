@@ -43,7 +43,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-surface-900 to-slate-900 flex">
+    <div className="min-h-screen bg-surface-50 flex">
       {/* Left — Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
@@ -51,7 +51,7 @@ export default function RegisterPage() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-brand-700/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/55 to-slate-900/35" />
         <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -90,14 +90,14 @@ export default function RegisterPage() {
             <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
               <Car className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">
-              Skibidi<span className="text-brand-400">Car</span>
+            <span className="text-xl font-bold text-slate-900">
+              Skibidi<span className="text-brand-600">Car</span>
             </span>
           </Link>
 
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-1">Tạo tài khoản</h2>
-            <p className="text-slate-400 text-sm mb-8">
+          <div className="bg-white border border-cyan-100 rounded-2xl p-8 shadow-card">
+            <h2 className="text-2xl font-bold text-slate-900 mb-1">Tạo tài khoản</h2>
+            <p className="text-slate-500 text-sm mb-8">
               Đã có tài khoản?{' '}
               <Link to="/dang-nhap" className="text-brand-400 hover:text-brand-300 font-medium transition-colors">
                 Đăng nhập
@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
             {/* Error banner */}
             {errorMsg && (
-              <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 mb-6">
+              <div className="flex items-start gap-2 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-6">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                 <p className="text-red-400 text-sm">{parseErrors(errorMsg)}</p>
               </div>
@@ -115,7 +115,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name */}
               <div>
-                <label htmlFor="reg-name" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="reg-name" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Họ và tên
                 </label>
                 <div className="relative">
@@ -128,14 +128,14 @@ export default function RegisterPage() {
                     onChange={set('name')}
                     placeholder="Nguyễn Văn A"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
 
               {/* Email */}
               <div>
-                <label htmlFor="reg-email" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="reg-email" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Email
                 </label>
                 <div className="relative">
@@ -148,14 +148,14 @@ export default function RegisterPage() {
                     onChange={set('email')}
                     placeholder="you@example.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
 
               {/* Phone */}
               <div>
-                <label htmlFor="reg-phone" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="reg-phone" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Số điện thoại <span className="text-slate-500">(tùy chọn)</span>
                 </label>
                 <div className="relative">
@@ -167,14 +167,14 @@ export default function RegisterPage() {
                     value={form.phone}
                     onChange={set('phone')}
                     placeholder="0901 234 567"
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div>
-                <label htmlFor="reg-password" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="reg-password" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Mật khẩu
                 </label>
                 <div className="relative">
@@ -187,12 +187,12 @@ export default function RegisterPage() {
                     onChange={set('password')}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-11 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass((p) => !p)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                     aria-label="Toggle password"
                   >
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -223,7 +223,7 @@ export default function RegisterPage() {
 
               {/* Confirm Password */}
               <div>
-                <label htmlFor="reg-confirm" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="reg-confirm" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Xác nhận mật khẩu
                 </label>
                 <div className="relative">
@@ -236,16 +236,16 @@ export default function RegisterPage() {
                     onChange={set('password_confirmation')}
                     placeholder="••••••••"
                     required
-                    className={`w-full pl-10 pr-11 py-3 bg-white/5 border rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all ${
+                    className={`w-full pl-10 pr-11 py-3 bg-white border rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all ${
                       form.password_confirmation && form.password !== form.password_confirmation
                         ? 'border-red-500/50'
-                        : 'border-white/10'
+                        : 'border-slate-200'
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm((p) => !p)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                     aria-label="Toggle confirm password"
                   >
                     {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

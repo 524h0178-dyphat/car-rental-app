@@ -1,4 +1,3 @@
-﻿import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Clock, Headphones, Star, ArrowRight, MapPin } from 'lucide-react';
 import HeroSearchForm from '@/components/features/HeroSearchForm';
@@ -23,13 +22,13 @@ const BENEFITS = [
     icon: Headphones,
     title: 'Hỗ trợ tận tình',
     desc: 'Đội ngũ hỗ trợ luôn sẵn sàng giải đáp mọi thắc mắc của bạn.',
-    color: 'bg-orange-50 text-brand-500',
+    color: 'bg-cyan-50 text-brand-600',
   },
   {
     icon: MapPin,
     title: 'Giao xe tận nơi',
     desc: 'Giao xe đến tận địa chỉ bạn muốn trong nội thành.',
-    color: 'bg-purple-50 text-purple-600',
+    color: 'bg-sky-50 text-sky-600',
   },
 ];
 
@@ -54,19 +53,19 @@ function HeroSection() {
           className="w-full h-full object-cover"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/45 via-slate-900/25 to-slate-900/50" />
       </div>
 
       {/* Content */}
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <span className="inline-flex items-center gap-2 bg-brand-500/20 text-brand-300 border border-brand-500/30 rounded-full px-4 py-1.5 text-sm font-medium mb-6 animate-fade-up">
+        <span className="inline-flex items-center gap-2 bg-white/85 text-brand-700 border border-white/80 rounded-full px-4 py-1.5 text-sm font-medium mb-6 animate-fade-up shadow-sm">
           <Star className="w-4 h-4 fill-brand-400 text-brand-400" />
           Nền tảng cho thuê xe uy tín #1 Việt Nam
         </span>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight animate-fade-up" style={{ animationDelay: '100ms' }}>
           Thuê xe tự lái{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-300">
+          <span className="text-cyan-200">
             dễ dàng
           </span>{' '}
           & an toàn
@@ -98,11 +97,11 @@ function HeroSection() {
 // ─── Section: Benefits ──────────────────────────────────────────────────
 function BenefitsSection() {
   return (
-    <section className="py-20 bg-slate-50" aria-label="Lợi ích khi thuê xe tại SkibidiCar">
+    <section className="py-20 bg-slate-50 dark:bg-slate-900/30" aria-label="Lợi ích khi thuê xe tại SkibidiCar">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="section-title">Tại sao chọn SkibidiCar?</h2>
-          <p className="mt-3 text-slate-500 max-w-xl mx-auto">
+          <p className="mt-3 text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
             Chúng tôi cam kết mang đến trải nghiệm thuê xe tốt nhất cho bạn.
           </p>
         </div>
@@ -112,12 +111,12 @@ function BenefitsSection() {
               key={title}
               className="card p-6 flex flex-col items-start gap-4 hover:-translate-y-1 transition-transform duration-300"
             >
-              <div className={`w-12 h-12 rounded-2xl ${color} flex items-center justify-center`}>
+              <div className={`w-12 h-12 rounded-2xl ${color} dark:bg-opacity-20 flex items-center justify-center`}>
                 <Icon className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 mb-1">{title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{title}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
               </div>
             </div>
           ))}
@@ -137,7 +136,7 @@ function FeaturedCarsSection() {
         <div className="flex items-end justify-between mb-10">
           <div>
             <h2 className="section-title">Xe nổi bật</h2>
-            <p className="mt-2 text-slate-500">Những mẫu xe được khách hàng yêu thích nhất</p>
+            <p className="mt-2 text-slate-500 dark:text-slate-400">Những mẫu xe được khách hàng yêu thích nhất</p>
           </div>
           <Link to="/tim-xe" className="btn-outline py-2 px-4 text-sm hidden sm:flex">
             Xem tất cả
@@ -146,7 +145,7 @@ function FeaturedCarsSection() {
         </div>
 
         {isError && (
-          <div className="text-center py-16 text-slate-500">
+          <div className="text-center py-16 text-slate-500 dark:text-slate-400">
             <p>Không thể tải danh sách xe. Vui lòng thử lại.</p>
           </div>
         )}
@@ -172,26 +171,26 @@ function FeaturedCarsSection() {
 // ─── Section: Testimonials ──────────────────────────────────────────────
 function TestimonialsSection() {
   return (
-    <section className="py-20 bg-gradient-to-br from-brand-500 to-brand-700" aria-label="Đánh giá khách hàng">
+    <section className="py-20 bg-cyan-50" aria-label="Đánh giá khách hàng">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">Khách hàng nói gì?</h2>
-          <p className="mt-3 text-white/70">Hàng nghìn khách hàng hài lòng với dịch vụ của chúng tôi</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Khách hàng nói gì?</h2>
+          <p className="mt-3 text-slate-500">Hàng nghìn khách hàng hài lòng với dịch vụ của chúng tôi</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map(({ name, rating, text }) => (
-            <div key={name} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <div key={name} className="bg-white rounded-xl p-6 border border-cyan-100 shadow-card">
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: rating }).map((_, i) => (
                   <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
                 ))}
               </div>
-              <p className="text-white/90 text-sm leading-relaxed mb-4">"{text}"</p>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">"{text}"</p>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold text-sm">
+                <div className="w-9 h-9 rounded-full bg-brand-50 flex items-center justify-center text-brand-700 font-semibold text-sm">
                   {name[0]}
                 </div>
-                <p className="font-medium text-white text-sm">{name}</p>
+                <p className="font-medium text-slate-800 text-sm">{name}</p>
               </div>
             </div>
           ))}

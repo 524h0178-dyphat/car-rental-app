@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { SlidersHorizontal, X, Loader2 } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 import { useFilterStore } from '@/stores/filterStore';
 import { useFilterMeta } from '@/hooks/useFilterMeta';
 import { formatPrice } from '@/utils/formatters';

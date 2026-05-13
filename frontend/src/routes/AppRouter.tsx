@@ -10,9 +10,12 @@ const SearchPage        = lazy(() => import('@/pages/SearchPage'));
 const CarDetailPage     = lazy(() => import('@/pages/CarDetailPage'));
 const BookingPage       = lazy(() => import('@/pages/BookingPage'));
 const MyBookingsPage    = lazy(() => import('@/pages/MyBookingsPage'));
+const BookingDetailPage = lazy(() => import('@/pages/BookingDetailPage'));
 const ProfilePage       = lazy(() => import('@/pages/ProfilePage'));
 const AdminPage         = lazy(() => import('@/pages/AdminPage'));
 const CarSubmissionPage = lazy(() => import('@/pages/CarSubmissionPage'));
+const MyCarSubmissionsPage = lazy(() => import('@/pages/MyCarSubmissionsPage'));
+const ReviewCreatePage  = lazy(() => import('@/pages/ReviewCreatePage'));
 const LoginPage            = lazy(() => import('@/pages/LoginPage'));
 const RegisterPage         = lazy(() => import('@/pages/RegisterPage'));
 const ForgotPasswordPage   = lazy(() => import('@/pages/ForgotPasswordPage'));
@@ -48,12 +51,15 @@ export default function AppRouter() {
 
             {/* Protected (requires login) */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/dat-xe/:slug"   element={<BookingPage />} />
-              <Route path="/dat-xe-cua-toi" element={<MyBookingsPage />} />
-              <Route path="/tai-khoan"      element={<ProfilePage />} />
-              <Route path="/admin"          element={<AdminPage />} />
-              <Route path="/vi-dien-tu"     element={<WalletPage />} />
-              <Route path="/xe-cho-thue"    element={<OwnerBookingsPage />} />
+              <Route path="/dat-xe/:slug"         element={<BookingPage />} />
+              <Route path="/dat-xe-cua-toi"       element={<MyBookingsPage />} />
+              <Route path="/dat-xe-cua-toi/:id"   element={<BookingDetailPage />} />
+              <Route path="/tai-khoan"             element={<ProfilePage />} />
+              <Route path="/admin"                 element={<AdminPage />} />
+              <Route path="/vi-dien-tu"            element={<WalletPage />} />
+              <Route path="/xe-cho-thue"           element={<OwnerBookingsPage />} />
+              <Route path="/don-ky-gui"            element={<MyCarSubmissionsPage />} />
+              <Route path="/viet-danh-gia/:bookingId" element={<ReviewCreatePage />} />
             </Route>
           </Route>
 

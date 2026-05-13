@@ -23,6 +23,7 @@ export interface Booking {
   payment_status: PaymentStatus;
   renter_name: string;
   renter_phone: string;
+  renter_cccd?: string;
   pickup_address?: string;
   note?: string;
   cancel_reason?: string;

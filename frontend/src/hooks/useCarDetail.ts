@@ -9,3 +9,12 @@ export function useCarDetail(slug: string) {
     staleTime: 120_000,
   });
 }
+
+export function useCarAvailability(slug: string) {
+  return useQuery({
+    queryKey: ['car', slug, 'availability'],
+    queryFn: () => carService.getAvailability(slug),
+    enabled: !!slug,
+    staleTime: 60_000,
+  });
+}

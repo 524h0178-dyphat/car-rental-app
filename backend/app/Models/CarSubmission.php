@@ -10,8 +10,12 @@ class CarSubmission extends Model
     protected $fillable = [
         'owner_name', 'owner_phone', 'owner_email', 'owner_cccd', 'owner_address',
         'brand', 'model', 'year', 'license_plate', 'transmission', 'fuel', 'seats',
-        'expected_price_per_day', 'location_province', 'description',
+        'expected_price_per_day', 'location_province', 'description', 'images',
         'status', 'reject_reason', 'user_id',
+    ];
+
+    protected $casts = [
+        'images' => 'array',
     ];
 
     public function user(): BelongsTo

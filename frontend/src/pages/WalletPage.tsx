@@ -20,24 +20,24 @@ export default function WalletPage() {
         </div>
 
         {/* Balance Card */}
-        <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white shadow-xl mb-8 relative overflow-hidden">
+        <div className="bg-white rounded-2xl p-8 text-slate-900 shadow-card border border-cyan-100 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-10">
             <Wallet className="w-48 h-48" />
           </div>
           <div className="relative z-10">
-            <p className="text-brand-100 font-medium mb-2">Số dư hiện tại</p>
+            <p className="text-brand-700 font-medium mb-2">Số dư hiện tại</p>
             {isLoading ? (
-              <div className="h-10 bg-brand-500/50 rounded w-48 animate-pulse" />
+              <div className="h-10 bg-cyan-100 rounded w-48 animate-pulse" />
             ) : (
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
                 {formatPrice(wallet?.balance || 0)}
               </h2>
             )}
             <div className="mt-8 flex gap-3">
-              <button className="bg-white text-brand-600 font-semibold px-6 py-2.5 rounded-xl hover:bg-brand-50 transition-colors">
+              <button className="bg-brand-500 text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-brand-600 transition-colors">
                 Rút tiền
               </button>
-              <button className="bg-brand-500/30 text-white font-medium px-6 py-2.5 rounded-xl hover:bg-brand-500/50 transition-colors border border-white/20">
+              <button className="bg-cyan-50 text-brand-700 font-medium px-6 py-2.5 rounded-xl hover:bg-cyan-100 transition-colors border border-cyan-100">
                 Thêm thẻ
               </button>
             </div>
@@ -45,7 +45,7 @@ export default function WalletPage() {
         </div>
 
         {/* Transactions */}
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 md:p-8 shadow-card border border-slate-100 dark:border-slate-700">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Lịch sử giao dịch</h3>
 
           {isLoading && (

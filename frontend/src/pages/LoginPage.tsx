@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Car, Eye, EyeOff, Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useLogin } from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const login = useLogin();
-  const location = useLocation();
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/';
 
   const [email,       setEmail]       = useState('');
   const [password,    setPassword]    = useState('');
@@ -20,7 +18,7 @@ export default function LoginPage() {
   const errorMsg = login.error?.message;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-surface-900 to-slate-900 flex">
+    <div className="min-h-screen bg-surface-50 flex">
       {/* Left — Branding panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
@@ -28,7 +26,7 @@ export default function LoginPage() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-600/90 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/55 to-slate-900/35" />
         <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -63,14 +61,14 @@ export default function LoginPage() {
             <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
               <Car className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">
-              Skibidi<span className="text-brand-400">Car</span>
+            <span className="text-xl font-bold text-slate-900">
+              Skibidi<span className="text-brand-600">Car</span>
             </span>
           </Link>
 
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-1">Chào mừng trở lại!</h2>
-            <p className="text-slate-400 text-sm mb-8">
+          <div className="bg-white border border-cyan-100 rounded-2xl p-8 shadow-card">
+            <h2 className="text-2xl font-bold text-slate-900 mb-1">Chào mừng trở lại!</h2>
+            <p className="text-slate-500 text-sm mb-8">
               Chưa có tài khoản?{' '}
               <Link to="/dang-ky" className="text-brand-400 hover:text-brand-300 font-medium transition-colors">
                 Đăng ký ngay
@@ -79,7 +77,7 @@ export default function LoginPage() {
 
             {/* Error banner */}
             {errorMsg && (
-              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 mb-6">
+              <div className="flex items-center gap-2 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-6">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <p className="text-red-400 text-sm">{errorMsg}</p>
               </div>
@@ -88,7 +86,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div>
-                <label htmlFor="login-email" className="block text-sm font-medium text-slate-300 mb-1.5">
+                <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1.5">
                   Email
                 </label>
                 <div className="relative">
@@ -101,7 +99,7 @@ export default function LoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                 </div>
               </div>
@@ -109,7 +107,7 @@ export default function LoginPage() {
               {/* Password */}
               <div>
                 <div className="mb-1.5">
-                  <label htmlFor="login-password" className="block text-sm font-medium text-slate-300">
+                  <label htmlFor="login-password" className="block text-sm font-medium text-slate-700">
                     Mật khẩu
                   </label>
                 </div>
@@ -123,12 +121,12 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-11 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    className="w-full pl-10 pr-11 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-300 focus:border-transparent transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass((p) => !p)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                     aria-label={showPass ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                   >
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -160,15 +158,15 @@ export default function LoginPage() {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="flex-1 h-px bg-slate-200" />
               <span className="text-slate-500 text-xs">hoặc tiếp tục với</span>
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="flex-1 h-px bg-slate-200" />
             </div>
 
             {/* Social logins (placeholder) */}
             <div className="grid grid-cols-2 gap-3">
               <button
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300 hover:bg-white/10 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-700 hover:bg-cyan-50 transition-colors"
                 onClick={() => alert('Tính năng đang phát triển')}
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -180,7 +178,7 @@ export default function LoginPage() {
                 Google
               </button>
               <button
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300 hover:bg-white/10 transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm text-slate-700 hover:bg-cyan-50 transition-colors"
                 onClick={() => alert('Tính năng đang phát triển')}
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

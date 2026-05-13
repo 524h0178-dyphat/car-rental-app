@@ -20,7 +20,11 @@ export default function HeroSearchForm() {
     (e: React.FormEvent) => {
       e.preventDefault();
       // Push province filter into Zustand so SearchPage picks it up instantly
-      setFilters({ province: province || undefined });
+      setFilters({
+        province: province || undefined,
+        start_date: startDate || undefined,
+        end_date: endDate || undefined,
+      });
       const params = new URLSearchParams();
       if (province)  params.set('province',   province);
       if (startDate) params.set('start_date', startDate);

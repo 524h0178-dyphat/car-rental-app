@@ -2,6 +2,7 @@ export interface Location {
   id: number;
   name: string;
   province: string;
+  display_name?: string;
   coordinates?: string;
 }
 
@@ -63,6 +64,8 @@ export interface CarFilters {
   province?: string;
   price_min?: string;
   price_max?: string;
+  start_date?: string;
+  end_date?: string;
   features?: string;
   sort_by?: string;
   sort_dir?: string;

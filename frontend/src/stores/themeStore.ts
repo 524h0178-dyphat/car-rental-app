@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface ThemeStore {
@@ -23,6 +23,8 @@ export const useThemeStore = create<ThemeStore>()(
         // Restore dark class on page load
         if (state?.isDark) {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
       },
     }

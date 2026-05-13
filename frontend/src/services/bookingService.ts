@@ -12,6 +12,27 @@ interface PaginatedBookings {
 }
 
 export const bookingService = {
+  /** POST /bookings/preview — check availability without creating booking */
+  preview: async (payload: {
+    car_id: number;
+    start_date: string;
+    end_date: string;
+  }): Promise<{
+    data: {
+      car_id: number;
+      car_name: string;
+      start_date: string;
+      end_date: string;
+      total_days: number;
+      price_per_day: number;
+      total_price: number;
+      available: boolean;
+    };
+  }> => {
+    const res = await api.post('/bookings/preview', payload);
+    return res.data;
+  },
+
   /** POST /bookings — create a new booking */
   store: async (payload: StoreBookingPayload): Promise<{ message: string; data: Booking }> => {
     const res = await api.post('/bookings', payload);

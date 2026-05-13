@@ -73,7 +73,7 @@ export function useOwnerHandover() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => bookingService.ownerHandover(id),
-    onSuccess: (res, id) => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['owner-bookings'] });
       toast.success(res.message || 'Đã bàn giao xe.');
     },

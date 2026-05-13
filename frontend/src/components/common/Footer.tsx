@@ -21,17 +21,17 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-surface-900 text-slate-400 pt-16 pb-8">
+    <footer className="bg-white text-slate-500 pt-16 pb-8 border-t border-cyan-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-slate-100">
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4" aria-label="SkibidiCar">
               <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
                 <Car className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">
+              <span className="text-xl font-bold text-slate-900">
                 Skibidi<span className="text-brand-500">Car</span>
               </span>
             </Link>
@@ -39,11 +39,11 @@ export default function Footer() {
               Nền tảng cho thuê xe tự lái uy tín tại Việt Nam. Đa dạng xe, giá minh bạch, trải nghiệm tuyệt vời.
             </p>
             <div className="flex flex-col gap-2 text-sm">
-              <a href="tel:19001234" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="tel:19001234" className="flex items-center gap-2 hover:text-brand-700 transition-colors">
                 <Phone className="w-4 h-4 text-brand-400" />
                 1900 1234
               </a>
-              <a href="mailto:support@skibidicar.vn" className="flex items-center gap-2 hover:text-white transition-colors">
+              <a href="mailto:support@skibidicar.vn" className="flex items-center gap-2 hover:text-brand-700 transition-colors">
                 <Mail className="w-4 h-4 text-brand-400" />
                 support@skibidicar.vn
               </a>
@@ -57,13 +57,13 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h3 className="text-white font-semibold mb-4 text-sm">{title}</h3>
+              <h3 className="text-slate-900 font-semibold mb-4 text-sm">{title}</h3>
               <ul className="flex flex-col gap-2">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       to={link.to}
-                      className="text-sm hover:text-white transition-colors hover:translate-x-0.5 inline-block duration-200"
+                      className="text-sm hover:text-brand-700 transition-colors hover:translate-x-0.5 inline-block duration-200"
                     >
                       {link.label}
                     </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
               href="https://facebook.com"
               target="_blank"
               rel="noreferrer"
-              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-brand-500/20 flex items-center justify-center transition-colors text-xs font-bold text-slate-400 hover:text-white"
+              className="w-8 h-8 rounded-lg bg-cyan-50 hover:bg-cyan-100 flex items-center justify-center transition-colors text-xs font-bold text-slate-500 hover:text-brand-700"
               aria-label="Facebook"
             >
               FB
@@ -93,7 +93,7 @@ export default function Footer() {
               href="https://youtube.com"
               target="_blank"
               rel="noreferrer"
-              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-brand-500/20 flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-lg bg-cyan-50 hover:bg-cyan-100 flex items-center justify-center transition-colors text-slate-500 hover:text-brand-700"
               aria-label="Youtube"
             >
               <ExternalLink className="w-4 h-4" />

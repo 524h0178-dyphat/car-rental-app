@@ -5,6 +5,7 @@ import type { Car } from '@/types';
 import { formatPrice } from '@/utils/formatters';
 import { optimizeImageUrl, unsplashSrcSet } from '@/utils/imageUtils';
 import { StarRating } from '@/components/features/ReviewsSection';
+import { formatLocation } from '@/utils/location';
 
 interface CarCardProps {
   car: Car;
@@ -50,7 +51,7 @@ function CarCard({ car }: CarCardProps) {
         {car.location && (
           <p className="flex items-center gap-1 text-xs text-slate-400 mb-1">
             <MapPin className="w-3 h-3" />
-            {car.location.name}, {car.location.province}
+            {formatLocation(car.location)}
           </p>
         )}
 

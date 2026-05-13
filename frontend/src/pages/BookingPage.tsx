@@ -9,6 +9,7 @@ import { useCarDetail } from '@/hooks/useCarDetail';
 import { useAuthStore } from '@/stores/authStore';
 import { useCreateBooking } from '@/hooks/useBooking';
 import { formatPrice } from '@/utils/formatters';
+import { formatLocation } from '@/utils/location';
 import type { BookingFormData, PaymentMethod } from '@/types/booking';
 
 // ── Step indicator ───────────────────────────────────────────────────────────
@@ -113,7 +114,7 @@ function Step1({
           {car.location && (
             <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
               <MapPin className="w-3 h-3" />
-              {car.location.name}, {car.location.province}
+              {formatLocation(car.location)}
             </p>
           )}
         </div>
@@ -385,8 +386,8 @@ function Step3({
           ['Người thuê', form.renter_name],
           ['Điện thoại', form.renter_phone],
           ['CCCD', form.renter_cccd],
-          form.pickup_address ? ['Nhận xe tại', form.pickup_address] : null,
-        ].filter(Boolean).map(([k, v]) => (
+          ...(form.pickup_address ? [['Nhận xe tại', form.pickup_address]] : []),
+        ].map(([k, v]) => (
           <div key={k} className="flex justify-between gap-4">
             <span className="text-slate-500 flex-shrink-0">{k}</span>
             <span className="text-slate-800 font-medium text-right">{v}</span>
@@ -477,9 +478,6 @@ export default function BookingPage() {
   const formWithCar = { ...form, car_id: car.id };
 
   const handleSubmit = () => {
-    const totalDays = Math.max(1, Math.ceil(
-      (new Date(form.end_date).getTime() - new Date(form.start_date).getTime()) / 86400000
-    ));
     createBooking.mutate(
       {
         car_id:         car.id,
