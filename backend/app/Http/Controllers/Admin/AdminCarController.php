@@ -164,7 +164,7 @@ class AdminCarController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $car = Car::findOrFail($id);
+        $car = Car::withTrashed()->findOrFail($id);
         $car->delete(); // soft delete
 
         return response()->json(['message' => 'Đã xóa xe thành công.']);

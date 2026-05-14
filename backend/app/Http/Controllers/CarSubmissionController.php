@@ -39,6 +39,7 @@ class CarSubmissionController extends Controller
     public function mySubmissions(Request $request): JsonResponse
     {
         $submissions = CarSubmission::where('user_id', $request->user()->id)
+            ->with(['car' => function($q) { $q->withTrashed(); }])
             ->latest()
             ->get()
             ->map(fn($s) => [
@@ -53,6 +54,7 @@ class CarSubmissionController extends Controller
                 'slug'         => $s->car?->slug,
                 'price'        => $s->car ? $s->car->price_per_day : $s->expected_price_per_day,
                 'car_status'   => $s->car?->status,
+                'is_car_deleted' => $s->car ? $s->car->trashed() : false,
                 'created_at'   => $s->created_at->toDateTimeString(),
             ]);
 
@@ -65,7 +67,7 @@ class CarSubmissionController extends Controller
      */
     public function adminList(Request $request): JsonResponse
     {
-        $submissions = CarSubmission::with('user:id,name,email,phone')
+        $submissions = CarSubmission::with(['user:id,name,email,phone', 'car' => function($q) { $q->withTrashed(); }])
             ->when($request->status, fn($q) => $q->where('status', $request->status))
             ->when($request->search, fn($q) => $q->where(function ($q2) use ($request) {
                 $q2->where('owner_name', 'like', "%{$request->search}%")
@@ -93,6 +95,7 @@ class CarSubmissionController extends Controller
                 'description'           => $s->description,
                 'status'                => $s->status,
                 'status_label'          => $s->statusLabel(),
+                'is_car_deleted'        => $s->car ? $s->car->trashed() : false,
                 'reject_reason'         => $s->reject_reason,
                 'user'                  => $s->user ? ['id' => $s->user->id, 'name' => $s->user->name] : null,
                 'created_at'            => $s->created_at->toDateTimeString(),
@@ -179,7 +182,9 @@ class CarSubmissionController extends Controller
         // Create a car record from submission if user exists
         if ($submission->user_id) {
             $slug = \Illuminate\Support\Str::slug($submission->brand . '-' . $submission->model . '-' . $submission->license_plate);
-            if (!\App\Models\Car::withTrashed()->where('slug', $slug)->exists()) {
+            $car = \App\Models\Car::withTrashed()->where('slug', $slug)->first();
+
+            if (!$car) {
                 $location = $this->resolveLocation($submission->location_province);
                 $car = \App\Models\Car::create([
                     'owner_id'      => $submission->user_id,
@@ -199,6 +204,9 @@ class CarSubmissionController extends Controller
 
                 $this->attachSubmissionImages($car, $submission->images ?? []);
             }
+
+            $submission->car_id = $car->id;
+            $submission->save();
         }
 
         return response()->json([

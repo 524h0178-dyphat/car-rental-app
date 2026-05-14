@@ -19,6 +19,7 @@ interface Submission {
   slug?: string;
   price?: number;
   car_status?: string;
+  is_car_deleted?: boolean;
 }
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ElementType; bg: string }> = {
@@ -143,7 +144,7 @@ export default function MyCarSubmissionsPage() {
                       Biển số: <span className="font-mono font-medium text-slate-700 dark:text-slate-300">{submission.license_plate}</span>
                     </p>
                     
-                    {submission.status === 'approved' && (
+                    {submission.status === 'approved' && !submission.is_car_deleted && (
                       <div className="flex gap-2 mt-1.5 flex-wrap">
                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                           submission.car_status === 'available' 
@@ -171,25 +172,40 @@ export default function MyCarSubmissionsPage() {
                     )}
 
                     {/* Approved message */}
-                    {submission.status === 'approved' && (
-                      <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/50 rounded-lg flex items-center justify-between gap-2">
-                        <p className="text-sm text-green-700 dark:text-green-400">
-                          ✓ Xe của bạn đã được duyệt!
+                    {submission.is_car_deleted ? (
+                      <div className="mt-3 p-3 bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
+                        <p className="text-sm text-slate-600 dark:text-slate-300">
+                          Xe đã bị gỡ hoặc xóa khỏi hệ thống.
                         </p>
-                        {submission.car_id && (
-                          <button
-                            onClick={() => setEditingCar({ id: submission.car_id!, price: submission.price ?? 500000, status: submission.car_status ?? 'available' })}
-                            className="btn-outline py-1.5 px-3 text-xs border-green-200 dark:border-green-900/50 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 flex-shrink-0"
-                          >
-                            Quản lý xe
-                          </button>
-                        )}
                       </div>
+                    ) : (
+                      submission.status === 'approved' && (
+                        <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/50 rounded-lg flex items-center justify-between gap-2">
+                          <p className="text-sm text-green-700 dark:text-green-400">
+                            ✓ Xe của bạn đã được duyệt!
+                          </p>
+                          {submission.car_id && (
+                            <button
+                              onClick={() => setEditingCar({ id: submission.car_id!, price: submission.price ?? 500000, status: submission.car_status ?? 'available' })}
+                              className="btn-outline py-1.5 px-3 text-xs border-green-200 dark:border-green-900/50 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 flex-shrink-0"
+                            >
+                              Quản lý xe
+                            </button>
+                          )}
+                        </div>
+                      )
                     )}
                   </div>
 
                   <div className="flex flex-col items-end gap-3">
-                    <StatusBadge status={submission.status} label={submission.status_label} />
+                    {submission.is_car_deleted ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-600">
+                        <XCircle className="w-3.5 h-3.5" />
+                        Xe đã bị gỡ
+                      </span>
+                    ) : (
+                      <StatusBadge status={submission.status} label={submission.status_label} />
+                    )}
                     <Link
                       to={`/ky-gui-xe/${submission.id}`}
                       className="text-xs text-brand-500 hover:text-brand-600 font-medium flex items-center gap-1"

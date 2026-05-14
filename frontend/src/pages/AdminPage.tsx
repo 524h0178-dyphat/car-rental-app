@@ -107,6 +107,15 @@ const SUB_STATUS_CFG: Record<SubmissionStatus, { label: string; color: string }>
 
 function SubmissionStatusUpdater({ item }: { item: CarSubmissionItem }) {
   const update = useUpdateSubmissionStatus();
+
+  if (item.is_car_deleted) {
+    return (
+      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500 dark:text-slate-400">
+        Xe đã xóa
+      </span>
+    );
+  }
+
   const nexts: SubmissionStatus[] = item.status === 'pending'
     ? ['reviewing', 'approved', 'rejected']
     : item.status === 'reviewing'
@@ -379,6 +388,147 @@ function BookingsTable() {
   );
 }
 
+// ── Cars Table ────────────────────────────────────────────────────────────────
+function CarsTable() {
+  const [page, setPage]   = useState(1);
+  const [search, setSearch] = useState('');
+  const [query, setQuery]   = useState('');
+  const [status, setStatus] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['admin-cars', page, query, status],
+    queryFn: () => adminService.getCars({ search: query || undefined, status: status || undefined, page }),
+  });
+
+  const toggleHide = useMutation({
+    mutationFn: (id: number) => adminService.hideCar(id),
+    onSuccess: () => {
+      toast.success('Đã ẩn/hiện xe.');
+      queryClient.invalidateQueries({ queryKey: ['admin-cars'] });
+    },
+    onError: () => toast.error('Thao tác thất bại.'),
+  });
+
+  const remove = useMutation({
+    mutationFn: (id: number) => adminService.deleteCar(id),
+    onSuccess: () => {
+      toast.success('Đã xóa xe.');
+      queryClient.invalidateQueries({ queryKey: ['admin-cars'] });
+    },
+    onError: () => toast.error('Thao tác thất bại.'),
+  });
+
+  return (
+    <div className="card overflow-hidden">
+      <div className="p-4 border-b border-slate-100 flex flex-wrap gap-3 items-center justify-between">
+        <h2 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+          <Car className="w-5 h-5 text-brand-500" /> Quản lý xe
+        </h2>
+        <div className="flex gap-2 flex-wrap">
+          <select
+            value={status}
+            onChange={(e) => { setStatus(e.target.value); setPage(1); }}
+            className="border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-700 dark:text-white bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          >
+            <option value="">Tất cả</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="hidden">Đã ẩn</option>
+          </select>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tên xe / Hãng..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { setQuery(search); setPage(1); } }}
+              className="pl-8 pr-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 dark:text-white"
+            />
+          </div>
+          <button onClick={() => refetch()} className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors" aria-label="Tải lại">
+            <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
+            <tr>
+              {['ID', 'Tên xe', 'Hãng', 'Giá/Ngày', 'Trạng thái', 'Hành động'].map((h) => (
+                <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    {Array.from({ length: 6 }).map((_, j) => (
+                      <td key={j} className="px-4 py-3"><div className="h-4 bg-slate-100 rounded w-3/4" /></td>
+                    ))}
+                  </tr>
+                ))
+              : !data?.data?.length
+                ? (<tr><td colSpan={6} className="px-4 py-12 text-center text-slate-400 text-sm">Không có xe nào.</td></tr>)
+                : data.data.map((c) => (
+                  <tr key={c.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400">#{c.id}</td>
+                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-white">{c.name}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{c.brand}</td>
+                    <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{formatPrice(c.price_per_day)}</td>
+                    <td className="px-4 py-3">
+                      {c.deleted_at ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                          Đã xóa
+                        </span>
+                      ) : (
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+                          c.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500 dark:text-slate-400'
+                        }`}>
+                          {c.status === 'active' ? 'Hoạt động' : 'Đã ẩn'}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => { if (confirm('Bạn có chắc chắn?')) toggleHide.mutate(c.id); }}
+                          disabled={toggleHide.isPending || !!c.deleted_at}
+                          className="p-1.5 rounded-lg text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          title="Ẩn/Hiện"
+                        >
+                          <EyeOff className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => { if (confirm('Xóa vĩnh viễn xe này?')) remove.mutate(c.id); }}
+                          disabled={remove.isPending || !!c.deleted_at}
+                          className="p-1.5 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          title="Xóa"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+            }
+          </tbody>
+        </table>
+      </div>
+      {data?.meta && data.meta.last_page > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+          <p className="text-xs text-slate-500 dark:text-slate-400">{data.meta.total} xe · Trang {page}/{data.meta.last_page}</p>
+          <div className="flex gap-2">
+            <button onClick={() => setPage((p) => p - 1)} disabled={page <= 1} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">← Trước</button>
+            <button onClick={() => setPage((p) => p + 1)} disabled={page >= data.meta.last_page} className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-600 dark:text-slate-300 hover:border-brand-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">Sau →</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Users Table ──────────────────────────────────────────────────────────────
 function UsersTable() {
   const [page, setPage]   = useState(1);
@@ -633,7 +783,7 @@ function ReviewsTable() {
 // ── Main Admin Dashboard ──────────────────────────────────────────────────────
 export default function AdminPage() {
   const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<'bookings' | 'submissions' | 'users' | 'reviews'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'submissions' | 'users' | 'reviews' | 'cars'>('bookings');
   const { data: stats, isLoading } = useAdminStats();
 
   // Guard: only admin
@@ -743,6 +893,7 @@ export default function AdminPage() {
           {([
             { key: 'bookings',    label: 'Đơn thuê xe',   icon: Calendar  },
             { key: 'submissions', label: 'Xe ký gửi',      icon: FileText  },
+            { key: 'cars',        label: 'Quản lý xe',    icon: Car       },
             { key: 'users',       label: 'Thành viên',     icon: Users     },
             { key: 'reviews',     label: 'Đánh giá',       icon: Star      },
           ] as const).map(({ key, label, icon: Icon }) => (
@@ -763,6 +914,7 @@ export default function AdminPage() {
 
         {activeTab === 'bookings'    && <BookingsTable />}
         {activeTab === 'submissions' && <CarSubmissionsTable />}
+        {activeTab === 'cars'        && <CarsTable />}
         {activeTab === 'users'       && <UsersTable />}
         {activeTab === 'reviews'     && <ReviewsTable />}
 

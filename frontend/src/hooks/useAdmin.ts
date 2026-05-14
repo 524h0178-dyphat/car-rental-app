@@ -8,6 +8,7 @@ interface AdminStats {
   total_users: number;
   total_bookings: number;
   revenue: number;
+  total_amount: number;
   bookings_status: Record<BookingStatus, number>;
   recent_bookings: Array<{
     id: number;
@@ -88,6 +89,7 @@ export interface CarSubmissionItem {
   reject_reason: string | null;
   user: { id: number; name: string } | null;
   created_at: string;
+  is_car_deleted?: boolean;
 }
 
 export function useAdminCarSubmissions(page = 1, status?: string, search?: string) {

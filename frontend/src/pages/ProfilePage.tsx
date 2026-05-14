@@ -366,9 +366,15 @@ function SubmissionsSummaryTab() {
             </p>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${COLORS[s.status] || 'bg-slate-100'}`}>
-              {s.status_label}
-            </span>
+            {s.is_car_deleted ? (
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-red-100 text-red-600">
+                Xe đã bị gỡ
+              </span>
+            ) : (
+              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${COLORS[s.status] || 'bg-slate-100'}`}>
+                {s.status_label}
+              </span>
+            )}
           </div>
         </div>
       ))}

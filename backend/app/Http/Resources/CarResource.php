@@ -37,6 +37,7 @@ class CarResource extends JsonResource
                 ?? $this->images->first()?->image_url
             ),
             'created_at'   => $this->created_at?->toISOString(),
+            'deleted_at'   => $this->deleted_at?->toISOString(),
         ];
     }
 }
