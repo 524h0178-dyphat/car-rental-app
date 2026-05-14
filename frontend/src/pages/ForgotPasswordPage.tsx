@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Car, Mail, Loader2, AlertCircle, CheckCircle2, ArrowLeft, KeyRound, Lock } from 'lucide-react';
 import { authService } from '@/services/authService';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -12,7 +13,8 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState('');
   
   // Form state
-  const [email, setEmail] = useState('');
+  const { user } = useAuthStore();
+  const [email, setEmail] = useState(user?.email || '');
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');

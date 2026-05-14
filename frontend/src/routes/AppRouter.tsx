@@ -67,11 +67,12 @@ export default function AppRouter() {
             </Route>
           </Route>
 
+          <Route path="/quen-mat-khau"    element={<ForgotPasswordPage />} />
+
           {/* ── Auth pages (guest only) ───────────────────────────── */}
           <Route element={<GuestRoute />}>
             <Route path="/dang-nhap"       element={<LoginPage />} />
             <Route path="/dang-ky"          element={<RegisterPage />} />
-            <Route path="/quen-mat-khau"    element={<ForgotPasswordPage />} />
           </Route>
         </Routes>
       </Suspense>
